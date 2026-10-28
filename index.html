@@ -273,11 +273,11 @@ footer .sign { font: 500 1.6rem/1 var(--font-hand); color: var(--pen); }
     </div>
     <ul class="sr" id="geo-list"></ul>
     <template id="d-phd">
-        <img class="figure" src="fault-detection-v2.webp" alt="F3 test section: ground-truth faults, from-scratch model and survey-conditioned model" width="1600" height="1000" style="padding:0; object-fit: cover; width: 100%; height: auto;">
+        <img class="figure" src="phd-certain.webp" alt="CRACKS section 131: the expert's certain faults, the best interpreter and the model trained on that interpreter's picks, each compared with the expert" width="1600" height="585" style="padding:0; object-fit: cover; width: 100%; height: auto;">
         <div class="project-meta mono"><span>PhD · UNSW</span><span>2024–2028</span></div>
         <h3>PhD research: deep learning for seismic interpretation</h3>
-        <p><strong>Faults:</strong> pre-training a U-Net++ on the unlabelled target survey, with masked-trace reconstruction and synthetic faults over real traces. Evaluated on F3 CRACKS by interpreter confidence.</p>
-        <p class="result">Recall on uncertain faults 0.25 → 0.40. With 10% of labels, Dice 0.295 vs 0.316 at 100%. Preliminary.</p>
+        <p><strong>Faults:</strong> three label-free ways to pre-train on the unlabelled target survey, then fine-tuning on a few labelled sections. Scored against an expert and eight interpreters on F3 CRACKS.</p>
+        <p class="result">Trained on one interpreter's picks, the model beats all eight interpreters: line F1 0.58 against 0.47. With no labels, a survey-calibrated generator beats five of the eight.</p>
         <p><strong>Relative geologic time:</strong> a systematic evaluation of a published 3D HRNet RGT model, trained on 2,000 synthetic volumes, on held-out synthetics and on F3 and Thebe field data, with sparse horizon guidance.</p>
         <p class="result">Horizon guidance cuts the error from 4.05 to 0.74 samples on held-out synthetics. A memory-lean rewrite runs a full volume in 2.2 s on one 16 GB GPU.</p>
         <div class="chips"><span class="chip">ASEG DISCOVER 2026</span><span class="chip">AEGC 2025 poster</span></div>
@@ -321,8 +321,9 @@ footer .sign { font: 500 1.6rem/1 var(--font-hand); color: var(--pen); }
     <template id="d-aseg">
         <div class="project-meta mono"><span>ASEG DISCOVER 2026 · Cairns</span><span>Wednesday 28 October, 14:45</span></div>
         <h3>Survey-conditioned pre-training for label-efficient seismic fault detection</h3>
+        <img class="figure" src="phd-leaderboard.webp" alt="Ranking by line F1 against the expert: models trained on one interpreter's picks score 0.56 to 0.58, above all eight interpreters" width="1600" height="860" style="padding:0; width: 100%; height: auto;">
         <p>V. Alekseev, P. Makuluni, R. T. Armstrong, N. Khalili, S. R. Clark. Extended abstract and short oral talk, session 3.5.</p>
-        <p class="result">Recall on uncertain faults 0.25 → 0.40. With 10% of labels, Dice 0.295 vs 0.316 at 100%. Preliminary.</p>
+        <p class="result">Trained on one interpreter's picks, the model beats all eight interpreters: line F1 0.58 against 0.47. With no labels, a survey-calibrated generator beats five of the eight.</p>
     </template>
     <template id="d-papers2021">
         <div class="project-meta mono"><span>Skoltech</span><span>2021</span></div>
