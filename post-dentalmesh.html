@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3D CBCT AI and DentalMesh Studio · Vladislav Alekseev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="post.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="back" href="./">← Timeline</a>
+  <a class="me" href="./"><img src="photo.jpg" alt="" width="32" height="32">Vladislav Alekseev</a>
+</div></header>
+<main class="wrap">
+  <article class="post">
+    <div class="post-meta"><img class="logo" src="logo-dentalmesh.png" alt="DentalMesh AI" height="22" width="134"><span>DentalMesh AI · Lead Computer Vision Engineer · 2023–2026</span></div>
+    <h1>3D CBCT AI and DentalMesh Studio</h1>
+    
+    <p class="lede">DentalMesh AI turns a dental CBCT scan into 3D models, clinical reformats and a PDF report with no manual work. I designed the 3D inference pipeline behind it, took it to production on several clouds and worked on DentalMesh Studio, a 3D viewer where every action is also a typed command.</p>
+
+<section><h2>The problem</h2>
+<p>A cone-beam CT (CBCT) scan of the jaw is a 3D volume. Orthodontists, dental labs and aligner makers need more than the raw volume: a 3D model of each tooth and bone, a panoramic view, standard slices through every tooth and the jaw joints, and cephalometric measurements. Done by hand, this means segmenting structures slice by slice and orienting each view manually. It is slow, and the result depends on who does it.</p>
+<p>DentalMesh sells this work as a service, priced per CBCT scan, to labs, clinics and dental software companies. So the pipeline has to run on any scan a customer uploads, return the same outputs every time and stay cheap enough to run per scan.</p>
+</section>
+
+<section><h2>Approach</h2>
+<figure><img src="schematic-cbct.webp" alt="Diagram of the CBCT inference pipeline from scan to report" width="1600" height="1000"><figcaption>From scan to report: preprocessing, segmentation and FDI numbering, cephalometric landmarks, 3D meshes, clinical reformats and a localised PDF report.</figcaption></figure>
+<p><strong>One pipeline from scan to report.</strong> A scan goes through preprocessing, then several segmentation models: anatomy, airway and teeth. Each tooth gets its FDI number. A landmark model finds cephalometric points. From the segmentations and landmarks, the pipeline builds the clinical reformats: TMJ cross-sections, a central sagittal slice through each tooth, and a panoramic reconstruction. It also computes 3D meshes and writes a localised PDF report.</p>
+<p><strong>A modular refactor.</strong> The first version was one monolithic script. I split it into stages that share one inference engine and one set of core utilities. Each stage can be run, tested and profiled on its own. I added per-stage profiling and a benchmark that tracks throughput and resource use across volume sizes, so a change to one model shows its cost in the whole run.</p>
+<p><strong>Production delivery.</strong> The pipeline ships as a Docker image. CI builds it, pushes it to a container registry and runs GPU regression tests and API integration tests. The same image is deployed on more than one cloud provider.</p>
+<p><strong>DentalMesh Studio.</strong> Studio is the viewer where clinicians open the result. Its design follows a few rules:</p>
+<ul>
+<li>The scan comes first. Only the images and the current state stay on screen. Controls appear when they are needed.</li>
+<li>Everything can be typed. Every action in the product is also a command, in English or Russian, such as "hide bone" or "show 36 with the nerve". If a command can be read two ways, Studio offers the readings instead of guessing.</li>
+<li>Actions sit next to the object. A right click on a tooth or a structure opens what can be done to it, for example isolating it from the other tissues.</li>
+<li>No function is more than three actions away from an open case.</li>
+<li>Clinicians keep their habits. The mouse wheel scrolls slices and all values are in millimetres, as in most CBCT viewers.</li>
+<li>Every change can be undone. Commands, gestures, measurements and layout changes go into one history.</li>
+</ul>
+<p>AI output stays editable. If the network gives a tooth the wrong number, the user renames it in one action.</p>
+</section>
+
+<section><h2>Results</h2>
+<p>The pipeline is in commercial use. Labs and clinics buy segmentation, reformat and cephalometry reports per CBCT scan through <a href="https://dentalmesh.ai">dentalmesh.ai</a>, and software vendors can integrate the results through an API.</p>
+<p>The public product covers:</p>
+<ul>
+<li>CBCT segmentation into 3D models, including the TMJ, the airway and the alveolar bone.</li>
+<li>Panoramic reformats, per-tooth sagittal slices and TMJ cross-sections, built from anatomical landmarks.</li>
+<li>Cephalometric analysis with AI landmarks that the orthodontist can adjust, and standard analyses such as Steiner, Downs, Tweed and Ricketts.</li>
+<li>Structured PDF reports.</li>
+</ul>
+<figure><img src="dm-segmentation.webp" alt="3D model of a skull from CBCT with every tooth segmented in its own colour, plus the jaw bones and nerve canals." width="988" height="888"><figcaption>CBCT segmentation as a 3D model: each tooth gets its own colour and number, with the jaws and the nerve canals.</figcaption></figure>
+<figure><img src="dm-reformats.webp" alt="Map of CBCT reformats: panoramas, cephalograms, TMJ slices, per-tooth sagittal slices, coronal slices by quadrant and axial slices." width="1280" height="637"><figcaption>The reformats built from one scan, from panoramas and cephalograms to per-tooth and TMJ slices.</figcaption></figure>
+<figure><img src="dm-ceph.webp" alt="Cephalometric analysis screen with landmarks traced on a lateral cephalogram and a table of measurements against reference values." width="1600" height="629"><figcaption>Cephalometric analysis: AI landmarks on a lateral cephalogram and the measurements of the chosen analysis against reference values.</figcaption></figure>
+<figure><img src="studio-v2.webp" alt="DentalMesh Studio showing a segmented CBCT scan in 3D with slice views" width="1600" height="1000"><figcaption>DentalMesh Studio: the 3D model and three CBCT slice views of one case, with the scene panel and a command bar.</figcaption></figure>
+</section>
+
+<section><h2>My role</h2>
+<p>Lead Computer Vision Engineer at DentalMesh AI, part-time and remote, from October 2023 to November 2026. I designed the end-to-end CBCT inference pipeline, led the refactor into a modular stage-based architecture, built the profiling and benchmarking tools, and set up the Docker images and the multi-cloud CI/CD with GPU regression tests. On DentalMesh Studio I did both the interaction design and the front-end code.</p>
+</section>
+
+<section><h2>Stack</h2><ul class="chips"><li>Python</li><li>PyTorch</li><li>MONAI</li><li>nnU-Net</li><li>SimpleITK</li><li>NumPy/SciPy</li><li>scikit-learn</li><li>OpenCV</li><li>VTK</li><li>PyVista</li><li>PyMeshLab</li><li>Docker</li><li>GitHub Actions</li><li>GCP</li><li>Azure</li><li>AWS</li></ul></section>
+
+  </article>
+</main>
+<footer class="wrap"><a class="back" href="./">← Back to the timeline</a><span class="sign">— Vlad</span></footer>
+</body>
+</html>

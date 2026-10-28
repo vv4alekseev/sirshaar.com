@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Product design for AI tools in oil and gas · Vladislav Alekseev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="post.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="back" href="./">← Timeline</a>
+  <a class="me" href="./"><img src="photo.jpg" alt="" width="32" height="32">Vladislav Alekseev</a>
+</div></header>
+<main class="wrap">
+  <article class="post">
+    <div class="post-meta"><img class="logo" src="logo-dp.png" alt="Digital Petroleum" height="22" width="36"><span>Digital Petroleum · Lead UI/UX Designer · 2020–2022</span></div>
+    <h1>Product design for AI tools in oil and gas</h1>
+    
+    <p class="lede">At Digital Petroleum, a company co-founded by Skoltech that builds AI tools for oil and gas, I was the lead UI/UX designer from 2020 to 2022. I designed and prototyped three web apps, DeepCore, AIDrilling and 4FIELD, managed their front-end development, and reworked the company brand and conference handouts.</p>
+
+<section>
+<h2>The problem</h2>
+<p>Each model had to reach geologists, drilling engineers and asset teams as a cloud web app they could use without knowing machine learning. Each product had the same tension. The model is fast but sometimes wrong, so the interface has to show how confident it is and let the expert correct it.</p>
+<p>DeepCore is a good example. Core is photographed in boxes, several columns per box, in order of depth. A model can turn these photos into a lithotype log, which normally takes a geologist hours. The task splits into two steps. Segmentation cuts the core out of the box, removes walls and neighbouring rows, and joins the pieces into one continuous column. Classification then assigns a lithotype to each interval. Both steps make mistakes, so the brief asked for manual correction at each step and for saving work so a user could stop and resume later.</p>
+</section>
+
+<section>
+<h2>Approach</h2>
+<p><strong>Follow the expert's workflow.</strong> DeepCore became a four-step flow: view, core extraction, depth referencing, classification. A stepper keeps the current step visible. A core overview strip with depth marks sits on the left. The main view puts the photo next to the predicted lithology column. Clicking an interval opens the class probabilities, for example 81% siltstone and 19% mixed rocks, so the geologist sees where the model is unsure before accepting or repainting it.</p>
+<p><strong>Test the words, not only the screens.</strong> Early in the project we compared two versions of the DeepCore product description, one formal and one plain, with 17 geologists, lithologists and other geoscientists from oil companies, a service company, research institutes and universities. Twelve preferred the plain version, four the formal one and one suggested using both. Comments asked for a short plain overview followed by technical figures, and for no slang. I ran it together with the team.</p>
+<p><strong>Make uncertainty part of the result.</strong> 4FIELD estimates the oil recovery factor of a field from its parameters, even when some inputs are missing. The input form follows the domain (geometry, geology, fluid properties, development, production), with separate calculators for green and brown fields. The result shows a prediction interval rather than a single number, plus a plot of how the field compares with the fields in the training set. Reports export to PDF.</p>
+<p><strong>Fit into the operations room.</strong> AIDrilling predicts drilling incidents such as stuck pipe, lost circulation, kicks and washouts in real time from mud log data streamed over WITSML. It needs no extra sensors and no manual input, and the product sheet lists support for more than 30 wells at a time. I designed all of its screens.</p>
+<p><strong>One visual language.</strong> The product one-pagers and the company booklet share the reworked brand: the same header with the logo, the same blue to magenta accents and the same contact footer.</p>
+</section>
+
+<section>
+<h2>Results</h2>
+<figure><img src="digital-petroleum-v2.webp" alt="Interfaces of DeepCore and 4FIELD and the AIDrilling logo" width="1600" height="1000"><figcaption>English interfaces: DeepCore core classification with per-class probabilities, an AIDrilling wellbore risk view and two 4FIELD analysis charts.</figcaption></figure>
+<figure><img src="post-dp-1-v2.webp" alt="Three one-page product sheets for DeepCore, AIDrilling and 4Field in a shared visual style" width="1600" height="757"><figcaption>English one-page product sheets for DeepCore, AIDrilling and 4FIELD.</figcaption></figure>
+<ul>
+<li>DeepCore and 4FIELD are live as web apps under the company domain.</li>
+<li>For DeepCore, a co-authored paper reports that a sedimentologist described 60 m of core in 40 minutes instead of 5 hours, seven times faster.</li>
+</ul>
+</section>
+
+<section>
+<h2>My role</h2>
+<p>Lead UI/UX Designer (September 2020 to August 2022), Moscow. I owned the design of all three apps and an admin panel, from user flows to Figma prototypes, and I managed the front-end development that implemented them. I also reworked the company brand and prepared handouts for conferences, forums and presentations.</p>
+<p>Before that, as a Computer Vision Intern (June to August 2020), I worked on improving micro-CT image quality and benchmarked deep learning against classical methods.</p>
+</section>
+
+<section>
+<h2>Stack</h2>
+<ul class="chips">
+<li>Figma</li>
+<li>Illustrator</li>
+<li>Photoshop</li>
+<li>Prototyping</li>
+<li>Brand identity</li>
+<li>Print design</li>
+</ul>
+</section>
+
+<section>
+<h2>Outputs</h2>
+<ul>
+<li><a href="https://deepcore.petroleum.digital">DeepCore</a>: automated full-cycle core description from core box photos, with depth referencing and lithotype classification.</li>
+<li>AIDrilling: real-time drilling incident prediction from mud log data.</li>
+<li><a href="https://4field.petroleum.digital">4FIELD</a>: fast assessment of oil field potential with uncertainty.</li>
+<li>Company rebrand.</li>
+<li>Handouts: one-page sheets for each product and a company booklet, in English and Russian.</li>
+</ul>
+</section>
+
+  </article>
+</main>
+<footer class="wrap"><a class="back" href="./">← Back to the timeline</a><span class="sign">— Vlad</span></footer>
+</body>
+</html>

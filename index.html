@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Vlad Alekseev: geophysics PhD candidate at UNSW Sydney and lead computer vision engineer.">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Vladislav Alekseev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: map strip on top, photo overlaps its lower edge; one 880px column below. Flat: rules and whitespace, no shadows, no card fills.
+   TOKENS: this block becomes src/styles/tokens.css in Astro. Single light theme by choice. */
+:root {
+  color-scheme: light;
+  --paper: #ffffff;
+  --ink: #1c2126;
+  --muted: #646c75;
+  --rule: #e4e7ea;
+  --wash: #f4f6f7;        /* flat fill for figure placeholders and chips */
+  --pen: #2c4ea3;         /* ballpoint blue for handwriting */
+  --live: #d4432f;
+  --map-bg: #eef1ec;
+  /* Geochron fills: International Chronostratigraphic Chart colours, lightened */
+  /* International Chronostratigraphic Chart (ICS/CGMW) colours */
+  --ics-paleozoic: #99c08d;  --ics-mesozoic: #67c5ca;  --ics-cenozoic: #f2f91d;
+  --ics-cambrian: #7fa056;   --ics-carboniferous: #67a599;
+  --ics-jurassic: #34b2c9;   --ics-cretaceous: #7fc64e;
+  --ics-paleogene: #fd9a52;  --ics-neogene: #ffe619;  --ics-quaternary: #f9f97f;
+  --geo-work: #dbe9e4;
+  --geo-work-strong: #b9d6cc;
+  --geo-work-ink: #2f7a5f;
+
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5rem;
+  --step-hand: 2.25rem;
+  --step-3: clamp(2.125rem, 5.5vw, 3.25rem);
+
+  --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;
+  --space-8: 32px; --space-12: 48px; --space-16: 64px;
+  --maxw: 880px;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: var(--step-0); line-height: 1.6; }
+a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+a:hover { text-decoration-color: currentColor; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--pen); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.mono { font-family: var(--font-mono); font-size: var(--step--1); }
+.todo { outline: 1px dashed var(--live); outline-offset: 2px; }
+
+/* Map strip */
+.map { position: relative; height: 170px; background: var(--map-bg); border-bottom: 1px solid var(--rule); overflow: hidden; }
+.map img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; max-width: none; }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: var(--space-8); padding-bottom: var(--space-12); }
+.photo { width: 168px; height: 168px; border-radius: 50%; border: 5px solid var(--paper); margin-top: -84px; object-fit: cover; max-width: none; position: relative; }
+.hello { padding-top: var(--space-6); display: grid; gap: var(--space-4); min-width: 0; }
+.hand-note { font: 500 1.5rem/1 var(--font-hand); color: var(--pen); margin: 0; }
+h1 { font-size: var(--step-3); line-height: 1.05; letter-spacing: -0.025em; font-weight: 700; margin: 0; text-wrap: balance; color: var(--pen); }
+.bio { color: var(--muted); margin: 0; max-width: 60ch; font-size: var(--step-1); line-height: 1.55; }
+.bio strong { color: var(--ink); font-weight: 600; }
+
+.icons { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; padding: 0; margin: 0; }
+.icons a { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border: 1px solid var(--rule); border-radius: 50%; color: var(--ink); }
+.icons a:hover { border-color: var(--ink); }
+.icons svg { width: 18px; height: 18px; }
+.icons .fill svg { fill: currentColor; }
+.icons .line svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Live: conference ticket, dashed edge */
+.live { margin-top: var(--space-2); border: 1.5px dashed var(--ink); border-radius: 14px; padding: var(--space-4) var(--space-6); display: grid; gap: var(--space-2); max-width: 560px;
+  /* ASEG DISCOVER 2026 motif, pale: sky over ground with a seismic trace on the horizon (from the conference header art). */
+  background: #e7f0f8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Crect width='600' height='150' fill='%23e7f0f8'/%3E%3Crect y='150' width='600' height='50' fill='%23e2f3e9'/%3E%3Cpath d='M0 151.0 L3 148.8 L6 148.8 L9 150.4 L12 148.2 L15 151.1 L18 151.1 L21 148.2 L24 150.7 L27 150.0 L30 150.5 L33 151.8 L36 151.9 L39 149.6 L42 151.4 L45 151.1 L48 151.9 L51 148.1 L54 151.8 L57 148.9 L60 148.5 L63 150.4 L66 151.4 L69 151.8 L72 149.5 L75 151.3 L78 148.1 L81 151.9 L84 149.2 L87 150.2 L90 148.5 L93 148.2 L96 148.0 L99 150.4 L102 150.2 L105 151.3 L108 151.4 L111 149.7 L114 151.4 L117 148.8 L120 151.5 L123 149.0 L126 151.8 L129 149.5 L132 149.7 L135 150.1 L138 148.2 L141 148.2 L144 150.2 L147 150.9 L150 148.1 L153 149.6 L156 149.4 L159 151.2 L162 152.1 L165 148.2 L168 150.2 L171 148.2 L174 151.3 L177 152.0 L180 151.0 L183 150.4 L186 147.8 L189 148.0 L192 148.7 L195 147.9 L198 148.1 L201 152.5 L204 149.2 L207 152.3 L210 151.5 L213 151.6 L216 152.5 L219 151.3 L222 149.0 L225 149.8 L228 149.2 L231 146.6 L234 146.5 L237 150.5 L240 150.2 L243 154.1 L246 151.1 L249 153.0 L252 149.8 L255 150.8 L258 153.4 L261 144.8 L264 144.4 L267 149.1 L270 147.3 L273 149.0 L276 143.9 L279 145.1 L282 143.8 L285 151.7 L288 142.1 L291 141.6 L294 153.3 L297 148.5 L300 140.4 L303 159.2 L306 149.8 L309 160.0 L312 153.5 L315 151.2 L318 147.3 L321 139.3 L324 163.0 L327 148.3 L330 144.2 L333 139.0 L336 153.1 L339 166.1 L342 146.6 L345 160.9 L348 157.3 L351 150.6 L354 156.0 L357 159.3 L360 167.6 L363 130.8 L366 134.6 L369 138.6 L372 130.5 L375 139.9 L378 147.0 L381 136.5 L384 150.0 L387 125.5 L390 170.9 L393 161.0 L396 129.4 L399 134.9 L402 163.7 L405 130.8 L408 162.7 L411 124.7 L414 156.7 L417 160.0 L420 152.3 L423 166.4 L426 174.6 L429 177.2 L432 125.0 L435 149.1 L438 128.6 L441 163.6 L444 133.7 L447 131.7 L450 125.9 L453 123.8 L456 137.2 L459 133.8 L462 151.2 L465 166.5 L468 161.3 L471 141.2 L474 137.9 L477 163.6 L480 139.3 L483 156.9 L486 171.6 L489 153.6 L492 148.8 L495 130.7 L498 140.1 L501 168.3 L504 132.5 L507 132.9 L510 153.8 L513 143.0 L516 153.5 L519 140.9 L522 140.8 L525 142.1 L528 156.6 L531 155.7 L534 136.5 L537 155.7 L540 156.9 L543 149.2 L546 140.1 L549 138.6 L552 160.8 L555 141.4 L558 139.7 L561 141.3 L564 157.7 L567 159.0 L570 154.5 L573 157.3 L576 154.9 L579 143.5 L582 148.3 L585 151.9 L588 152.5 L591 153.3 L594 152.3 L597 145.6 L600 148.9' fill='none' stroke='%23fff' stroke-width='1.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.live-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+.dot { display: inline-flex; align-items: center; gap: 6px; font: 500 var(--step--1) var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--live); }
+.dot::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--live); }
+@media (prefers-reduced-motion: no-preference) { .dot::before { animation: blink 1.8s ease-in-out infinite; } }
+@keyframes blink { 50% { opacity: 0.3; } }
+.live-head span:last-child { font-weight: 600; }
+.talk-title { font-weight: 600; font-size: var(--step-1); line-height: 1.35; margin: 0; }
+.talk-meta { display: flex; flex-wrap: wrap; gap: 4px var(--space-4); color: var(--muted); }
+/* Sits on the map, aligned with the right edge of the content column. */
+.coffee { position: absolute; bottom: 12px; right: max(16px, calc((100% - var(--maxw)) / 2 + 16px)); display: grid; grid-template-columns: auto auto; align-items: center; gap: 0 var(--space-2); margin: 0; padding: 6px 14px 8px; background: var(--paper); border: 1px solid var(--rule); border-radius: 14px; white-space: nowrap; cursor: default; }
+.coffee .hand-note { font-size: 1.3rem; }
+/* Caffeine meter, like a hunger bar in a game: one slot per coffee, three a day at most. */
+.coffee .cups { display: inline-flex; gap: 3px; justify-self: start; }
+.coffee { grid-template-columns: auto 1fr; }
+.coffee .cups svg { width: 20px; height: 20px; fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linejoin: round; }
+.coffee .cups svg.full { fill: var(--ink); stroke: var(--ink); }
+/* On phones the photo covers the lower part of the map, so the meter moves to the top. */
+.coffee .mono { grid-column: 1 / -1; color: var(--muted); }
+@media (max-width: 680px) { .coffee { top: 10px; bottom: auto; } }
+
+/* Sections */
+section { padding-block: var(--space-12); border-top: 1px solid var(--rule); }
+.hand { font: 700 var(--step-hand)/1 var(--font-hand); color: var(--pen); margin: 0 0 var(--space-6); display: inline-block; position: relative; }
+.hand svg { position: absolute; left: -4px; right: -4px; bottom: -10px; width: calc(100% + 8px); height: 12px; overflow: visible; }
+.hand path { fill: none; stroke: var(--pen); stroke-width: 2.2; stroke-linecap: round; }
+
+
+.project { display: grid; gap: var(--space-3); align-content: start; min-width: 0; }
+.figure { aspect-ratio: 16 / 10; max-width: 100%; border-radius: 10px; background: var(--wash); display: grid; place-items: center; text-align: center; color: var(--muted); padding: var(--space-4); }
+.project-meta { color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px var(--space-3); }
+.project h3 { font-size: var(--step-1); line-height: 1.3; margin: 0; }
+.project p { margin: 0; color: var(--muted); }
+.result { color: var(--ink) !important; font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12px/1 var(--font-mono); padding: 6px 9px; border-radius: 999px; background: var(--wash); color: var(--ink); text-decoration: none; }
+
+/* Legend for the dot colours on the rail. */
+.geo-legend { display: flex; flex-wrap: wrap; gap: 6px var(--space-4); margin: 0 0 var(--space-6); font: 500 12px/1 var(--font-body); color: var(--muted); }
+.geo-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.geo-legend i { width: 8px; height: 8px; border-radius: 50%; }
+.paper-list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); }
+.paper-list a { font-weight: 500; }
+.paper-list span { display: block; color: var(--muted); font-size: var(--step--1); }
+/* Scrollytelling: one-screen sticky column on the left, chapters scroll on the right */
+.geo-layout { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: clamp(48px, 7vw, 96px); align-items: start; }
+.geo-stick { position: sticky; top: env(safe-area-inset-top, 0px); height: 100vh; padding-block: 16px; }
+.geo-chapters { padding-bottom: 30vh; }
+/* Chapters read like a long-form blog: ~65ch measure, 18px/1.7 text, generous vertical rhythm, no dividers. */
+.geo-chapter { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; max-width: 680px; padding-block: 88px; opacity: 0.5; transform: translateY(14px); transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.geo-chapter figure { opacity: 0.6; transition: opacity 0.4s ease 0.12s; }
+.geo-chapter.is-active figure { opacity: 1; }
+.geo-lead { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.geo-chapter .result { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.geo-chapter.is-active { opacity: 1; transform: none; }
+.geo-chapter-meta { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; min-width: 0; margin-bottom: 14px; }
+.geo-chapter-meta .mono { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.geo-chapter h3 { margin: 0 0 18px; font-size: 1.75rem; line-height: 1.2; letter-spacing: -0.015em; text-wrap: balance; }
+.geo-chapter p { margin: 0 0 14px; color: var(--muted); max-width: 65ch; font-size: 1.125rem; line-height: 1.7; }
+.geo-chapter .result { color: var(--ink); font-size: 1.0625rem; }
+.geo-chapter figure { margin: 20px 0 8px; }
+.geo-chapter figure img { display: block; width: 100%; max-height: 340px; object-fit: contain; border: 1px solid var(--rule); border-radius: 10px; background: var(--paper); }
+.geo-chapter .geo-also { font-size: 0.875rem; line-height: 1.6; margin-top: 10px; }
+.geo-also b { color: var(--ink); margin-right: 4px; }
+.geo-also .paper { color: var(--live); } .geo-also .work { color: var(--geo-work-ink); } .geo-also .award { color: var(--pen); }
+.geo-chapter-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.geo-chapter-links .chip { padding: 9px 14px; font-size: 13px; }
+.geo-post { background: var(--ink); color: var(--paper) !important; }
+.geo-marker { position: absolute; height: 0; border-top: 2px solid var(--ink); z-index: 5; pointer-events: none; transition: top 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.geo-pill { position: absolute; z-index: 6; pointer-events: none; background: var(--ink); color: var(--paper); font: 500 12px/1.35 var(--font-body); padding: 4px 8px; border-radius: 6px; max-width: 320px; transition: top 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+@media (max-width: 760px) {
+  .geo-layout { grid-template-columns: 112px minmax(0, 1fr); gap: 14px; }
+  .geo-chapter { min-height: 50vh; padding-block: 56px; }
+  .geo-chapter p { font-size: 1rem; line-height: 1.65; }
+  .geo-chapter figure img { max-height: 180px; }
+  .geo-chapter h3 { font-size: 1.3rem; margin-bottom: 12px; }
+  .geo-pill { max-width: 104px; font-size: 11px; }
+  /* Narrow column: the logo gets its own line and the meta wraps instead of being cut off; the result is shown in full. */
+  .geo-chapter-meta { flex-wrap: wrap; gap: 6px 8px; margin-bottom: 10px; }
+  .geo-chapter-meta .mono { flex-basis: 100%; white-space: normal; overflow: visible; font-size: 12px; line-height: 1.45; }
+  .geo-chapter .result { display: block; -webkit-line-clamp: unset; font-size: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) { .geo-bar, .geo-chapter, .geo-chapter figure, .geo-marker, .geo-pill, .geo-lines [data-org] { transition: none; } .geo-chapter { transform: none; } }
+#timeline { width: min(1200px, calc(100vw - 48px)); margin-left: calc((100% - min(1200px, calc(100vw - 48px))) / 2); }
+/* Geochron: stratigraphic column of my career, youngest at the top. Drawn by script from #geo-data. */
+.geo-head { color: var(--muted); font: 500 11px/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--space-2); position: relative; height: 16px; }
+.geo-head span { position: absolute; top: 0; white-space: nowrap; }
+.geo { position: relative; touch-action: pan-y; }
+.geo-era { position: absolute; background: var(--wash); border-radius: 3px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.geo-era b { writing-mode: vertical-rl; transform: rotate(180deg); font: 600 11px/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+.geo-era small { font-weight: 400; letter-spacing: 0.02em; text-transform: none; color: var(--muted); font-size: 11px; }
+.geo-tick { position: absolute; height: 1px; background: var(--rule); }
+.geo-year { position: absolute; transform: translateY(-50%); font: 500 11px/1 var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.geo-bar { position: absolute; border: 1px solid rgba(28, 33, 38, 0.18); display: flex; align-items: center; justify-content: center; overflow: hidden; transition: opacity 0.15s; }
+.geo-bar.minor { border-color: transparent; }
+.geo-bar b { writing-mode: vertical-rl; transform: rotate(180deg); font: 600 12px/1.1 var(--font-body); color: var(--ink); white-space: nowrap; }
+.geo-bar.edu b { font-size: 13px; }
+.geo-bar.minor b { background: rgba(255, 255, 255, 0.85); padding: 4px 1px; border-radius: 2px; }
+.geo-bar.lens { border-radius: 50%; border-color: var(--geo-work-ink); }
+.geo-bar-logo { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); color: var(--ink); line-height: 0; }
+.geo-bar.has-detail { cursor: pointer; }
+.geo-bar.has-detail:hover, .geo-bar.has-detail:focus-visible { outline: 2px solid var(--pen); outline-offset: 1px; z-index: 2; }
+.geo-logo { display: inline-block; vertical-align: -2px; max-width: none; }
+.geo svg.geo-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.geo .geo-keydot { pointer-events: auto; cursor: pointer; stroke: var(--paper); stroke-width: 1.5; }
+.geo .geo-keydot:hover { stroke: var(--ink); }
+.geo-lines [data-org] { transition: opacity 0.15s; }
+.geo.dim .geo-bar:not(.lit), .geo.dim .geo-lines [data-org]:not(.lit) { opacity: 0.25; }
+.geo-now { position: absolute; height: 0; border-top: 1.5px dashed var(--live); }
+.geo-now span { position: absolute; right: 0; top: -18px; font: 700 1.1rem/1 var(--font-hand); color: var(--live); }
+
+footer { padding-block: var(--space-12) var(--space-16); border-top: 1px solid var(--rule); color: var(--muted); font-size: var(--step--1); display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-4); }
+footer .sign { font: 500 1.6rem/1 var(--font-hand); color: var(--pen); }
+
+@media (max-width: 680px) {
+  .map { height: 120px; }
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .photo { width: 128px; height: 128px; margin-top: -64px; }
+  .hello { padding-top: var(--space-4); }
+  .live { padding: var(--space-4); }
+}
+</style>
+</head>
+<body>
+
+<div class="map">
+  <picture>
+    <source media="(max-width: 680px)" type="image/webp" srcset="tabaga-m-640.webp 640w, tabaga-m-960.webp 960w" sizes="100vw">
+    <source type="image/webp" srcset="tabaga-d-1280.webp 1280w, tabaga-d-1950.webp 1950w" sizes="100vw">
+    <img src="tabaga-d-1280.jpg" alt="Soviet geological map around Staraya Tabaga on the Lena River, Yakutia" width="1280" height="217" fetchpriority="high" decoding="async">
+  </picture>
+  <!-- Live coffee counter: later fed by a Cloudflare Worker (NFC tag on the coffee machine). Numbers are examples. -->
+  <p class="coffee" title="2 of 3 coffees today, counted by an NFC tag on my coffee machine. The PhD total is estimated from the start on 27 May 2024 at about 2 a day."><span class="hand-note">caffeine</span><span class="cups" role="img" aria-label="2 of 3 coffees today"><svg class="full" viewBox="0 0 24 24"><path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16" fill="none"/></svg><svg class="full" viewBox="0 0 24 24"><path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16" fill="none"/></svg><svg viewBox="0 0 24 24"><path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16" fill="none"/></svg></span><span class="mono" id="phd-cups">PhD total: 1,839</span></p>
+  <script>
+    // Coffee by the Sydney clock: cups at 7:30, 9:30 and 13:00. The PhD total starts from 1,839 cups by the end of
+    // 27 Oct 2026 (estimated from the start on 27 May 2024 at about 2 a day) and adds today's cups on top.
+    (() => {
+      const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Australia/Sydney', year: 'numeric',
+        month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+        .formatToParts(new Date()).map((p) => [p.type, Number(p.value)]));
+      const mins = parts.hour * 60 + parts.minute;
+      const cups = [7 * 60 + 30, 9 * 60 + 30, 13 * 60].filter((m) => mins >= m).length;
+      const days = Math.round((Date.UTC(parts.year, parts.month - 1, parts.day) - Date.UTC(2026, 9, 28)) / 864e5);
+      const total = 1839 + 3 * Math.max(0, days) + cups;
+      const meter = document.querySelector('.coffee');
+      meter.querySelectorAll('.cups svg').forEach((svg, i) => svg.classList.toggle('full', i < cups));
+      meter.querySelector('.cups').setAttribute('aria-label', `${cups} of 3 coffees today`);
+      meter.title = `${cups} of 3 coffees today. The PhD total is estimated from the start on 27 May 2024 at about 2 a day.`;
+      document.getElementById('phd-cups').textContent = `PhD total: ${total.toLocaleString('en-AU')}`;
+    })();
+  </script>
+</div>
+
+<main class="wrap">
+  <header class="hero">
+    <img class="photo" src="photo.jpg" alt="Vladislav Alekseev" width="800" height="800">
+    <div class="hello">
+      <p class="hand-note">hi there, I'm</p>
+      <h1>Vlad Alekseev</h1>
+      <p class="bio">Geophysics PhD candidate at <strong>UNSW Sydney</strong> and lead computer vision engineer. I build deep learning for 3D data, from seismic and rock micro-CT to CT and CBCT, with 6+ years in production.</p>
+
+      <ul class="icons">
+        <li><a class="fill" href="https://www.linkedin.com/in/vladislav-alekseev/" title="LinkedIn"><span class="sr">LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></li>
+        <li><a class="fill" href="https://wa.me/61423349966" title="WhatsApp +61 423 349 966"><span class="sr">WhatsApp</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a></li>
+        <li><a class="line" href="mailto:vv4alekseev@gmail.com" title="vv4alekseev@gmail.com"><span class="sr">Email</span><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a></li>
+      </ul>
+
+      <!-- LIVE: remove after the conference -->
+      <div class="live">
+        <div class="live-head"><span class="dot">Live</span><span>I'm at ASEG DISCOVER 2026 · Cairns</span></div>
+        <p class="talk-title">Survey-conditioned pre-training for label-efficient seismic fault detection</p>
+        <div class="talk-meta mono"><span>Wednesday 28 October</span><span>14:45–14:55</span><span>Session 3.5 · Boardroom 2, Level 2</span></div>      </div>
+    </div>
+  </header>
+
+  <section id="timeline">
+    <h2 class="hand">Timeline<svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 7 C 25 4, 45 10, 65 5 S 90 6, 98 8"/></svg></h2>
+    <div class="geo-legend" aria-hidden="true">
+      <span><i style="background:var(--geo-work-ink)"></i>Jobs</span>
+      <span><i style="background:var(--live)"></i>Papers and talks</span>
+      <span><i style="background:var(--pen)"></i>Awards</span>
+      <span><i style="background:var(--ink)"></i>Milestones</span>
+    </div>
+    <div class="geo-layout">
+      <div class="geo-stick" id="geo-stick">
+        <div class="geo-head" id="geo-head" aria-hidden="true"></div>
+        <div class="geo" id="geo" role="img" aria-label="Career drawn as a stratigraphic column from 2014 to now"></div>
+      </div>
+      <div class="geo-chapters" id="geo-chapters"></div>
+    </div>
+    <ul class="sr" id="geo-list"></ul>
+    <template id="d-phd">
+        <img class="figure" src="fault-detection-v2.webp" alt="F3 test section: ground-truth faults, from-scratch model and survey-conditioned model" width="1600" height="1000" style="padding:0; object-fit: cover; width: 100%; height: auto;">
+        <div class="project-meta mono"><span>PhD · UNSW</span><span>2024–2028</span></div>
+        <h3>PhD research: deep learning for seismic interpretation</h3>
+        <p><strong>Faults:</strong> pre-training a U-Net++ on the unlabelled target survey, with masked-trace reconstruction and synthetic faults over real traces. Evaluated on F3 CRACKS by interpreter confidence.</p>
+        <p class="result">Recall on uncertain faults 0.25 → 0.40. With 10% of labels, Dice 0.295 vs 0.316 at 100%. Preliminary.</p>
+        <p><strong>Relative geologic time:</strong> a systematic evaluation of a published 3D HRNet RGT model, trained on 2,000 synthetic volumes, on held-out synthetics and on F3 and Thebe field data, with sparse horizon guidance.</p>
+        <p class="result">Horizon guidance cuts the error from 4.05 to 0.74 samples on held-out synthetics. A memory-lean rewrite runs a full volume in 2.2 s on one 16 GB GPU.</p>
+        <div class="chips"><span class="chip">ASEG DISCOVER 2026</span><span class="chip">AEGC 2025 poster</span></div>
+          </template>
+    <template id="d-twin">
+        <img class="figure" src="unsw-twin-v2.webp" alt="unsw_twin: load campus data, explore it, learn with tutorials, train models" width="1600" height="1000" style="padding:0; width: 100%; height: auto;">
+        <div class="project-meta mono"><span>UNSW · Research Officer</span><span>2026–now</span></div>
+        <h3>UNSW Digital Twin: machine learning on real campus data</h3>
+        <p>A curated offline dataset of the UNSW Kensington campus (aerial imagery, buildings, occupancy, CPTU soundings, weather, electricity) and <code>unsw_twin</code>, the Python toolkit behind the tutorials for CVEN4801, a machine learning course in civil engineering.</p>
+          </template>
+    <template id="d-microct">
+        <img class="figure" src="micro-ct-v2.webp" alt="The same rock sample in SEM, micro-CT, xenon-enhanced CT and a QEMSCAN mineral map" width="1600" height="1000" style="padding:0; width: 100%; height: auto;">
+        <div class="project-meta mono"><span>Skoltech</span><span>2020–2023</span></div>
+        <h3>Digital rock from core micro-CT</h3>
+        <p>3D rock models from micro-CT and SEM of core samples to estimate permeability in tight, microporous rock where lab measurement is not feasible. Denoising, multi-mineral segmentation, multi-resolution registration. Led the team from 2022.</p>
+        <p class="result">10× faster image registration</p>
+        <div class="chips"><a class="chip" href="https://onepetro.org/SPERPTC/proceedings-abstract/21RPTC/3-21RPTC/D031S017R004/470421">SPE 2021</a><a class="chip" href="https://www.sciencedirect.com/science/article/abs/pii/S0016236122021093">Fuel 2022</a></div>
+          </template>
+    <template id="d-dentalmesh">
+        <img class="figure" src="studio-v2.webp" alt="DentalMesh Studio: 3D view, three CBCT slices with segmentation and an FDI tooth chart" width="1600" height="1000" style="padding:0; width: 100%; height: auto;">
+        <div class="project-meta mono"><span>DentalMesh AI · Lead CV Engineer</span><span>2023–2026</span></div>
+        <h3>3D CBCT AI and DentalMesh Studio</h3>
+        <p><strong>ML:</strong> end-to-end CBCT pipeline with segmentation of anatomy, airway and teeth, FDI tooth numbering, cephalometric landmarks, clinical reformats and PDF reports. Synthetic CBCT with metal artefacts for robustness.</p>
+        <p><strong>Studio:</strong> a 3D CBCT viewer where every action is also a typed command in English or Russian, with tissue isolation, measurements and full undo.</p>
+        <p class="result">In commercial use: labs and clinics buy segmentation, reformat and cephalometry reports per CBCT scan.</p>
+        <div class="chips"><a class="chip" href="https://dentalmesh.ai">dentalmesh.ai</a></div>
+          </template>
+    <template id="d-orion">
+        <div class="project-meta mono"><span>BorneoLand AI · Lead CV Engineer</span><span>2025–now</span></div>
+        <h3>ORION: computer vision for school safety</h3>
+        <p>ORION turns existing school cameras into an always-on safety monitor, with behaviour analysis, stranger and restricted-zone alerts, and an interactive campus map.</p>
+        <div class="chips"><a class="chip" href="https://blaitech.com">blaitech.com</a></div>
+          </template>
+    <template id="d-dp">
+        <img class="figure" src="digital-petroleum-v2.webp" alt="Interfaces of DeepCore and 4FIELD and the AIDrilling logo" width="1600" height="1000" style="padding:0; width: 100%; height: auto;">
+        <div class="project-meta mono"><span>Digital Petroleum · Lead UI/UX Designer</span><span>2020–2022</span></div>
+        <h3>Product design for AI tools in oil and gas</h3>
+        <p>Designed and prototyped three AI web apps and managed their front-end development: DeepCore for automated core description, AIDrilling for drilling incident prediction and 4FIELD for fast field assessment. Also led the company rebrand.</p>
+        <div class="chips"><span class="chip">Figma</span><span class="chip">Illustrator</span><span class="chip">Photoshop</span></div>
+          </template>
+    <template id="d-aseg">
+        <div class="project-meta mono"><span>ASEG DISCOVER 2026 · Cairns</span><span>Wednesday 28 October, 14:45</span></div>
+        <h3>Survey-conditioned pre-training for label-efficient seismic fault detection</h3>
+        <p>V. Alekseev, P. Makuluni, R. T. Armstrong, N. Khalili, S. R. Clark. Extended abstract and short oral talk, session 3.5.</p>
+        <p class="result">Recall on uncertain faults 0.25 → 0.40. With 10% of labels, Dice 0.295 vs 0.316 at 100%. Preliminary.</p>
+    </template>
+    <template id="d-papers2021">
+        <div class="project-meta mono"><span>Skoltech</span><span>2021</span></div>
+        <h3>Papers on SEM, micro-CT and core images</h3>
+        <ul class="paper-list">
+          <li><a href="https://onepetro.org/SPERPTC/proceedings-abstract/21RPTC/3-21RPTC/D031S017R004/470421">Multi-mineral segmentation of SEM images using deep learning techniques</a><span>V. Alekseev, D. Orlov, D. Koroteev · SPE Russian Petroleum Technology Conference</span></li>
+          <li><a href="https://www.earthdoc.org/content/papers/10.3997/2214-4609.202159046">Mineral mapping of rock micro-images using computer vision and deep learning methods</a><span>V. Alekseev, D. Orlov, D. Koroteev · ProGREss'21</span></li>
+          <li><a href="https://www.earthdoc.org/content/papers/10.3997/2214-4609.202112886">An intellectual system for fast and reliable automated core description development</a><span>E. Baraboshkin, A. Demidov, D. Orlov, V. Alekseev, et al. · 82nd EAGE Annual Conference</span></li>
+          <li><a href="https://www.earthdoc.org/content/papers/10.3997/2214-4609.202156016">Automated full-bore core description application for production purposes</a><span>E. Baraboshkin, A. Demidov, et al., V. Alekseev · Data Science in Oil and Gas 2021</span></li>
+        </ul>
+    </template>
+    <!-- Data: decimal years (2019.5 = July 2019). Becomes a content collection in Astro. -->
+    <script type="application/json" id="geo-data">
+{
+  "range": [
+    2013.6,
+    2027.3
+  ],
+  "now": 2026.82,
+  "education": [
+    {
+      "name": "High school",
+      "from": 2013.6,
+      "to": 2014.6,
+      "color": "--ics-cambrian"
+    },
+    {
+      "name": "Gubkin University",
+      "full": "Gubkin University · Specialist, Geological Modelling",
+      "from": 2014.67,
+      "to": 2019.5,
+      "color": "--ics-carboniferous",
+      "org": "gubkin"
+    },
+    {
+      "name": "Skoltech MSc",
+      "full": "Skoltech · MSc, Petroleum Engineering",
+      "from": 2019.67,
+      "to": 2021.5,
+      "color": "--ics-jurassic",
+      "org": "skoltech"
+    },
+    {
+      "name": "UNSW PhD",
+      "full": "UNSW Sydney · PhD, Geophysics (to 2028)",
+      "from": 2024.33,
+      "to": 2028.5,
+      "color": "--ics-neogene",
+      "detail": "d-phd",
+      "org": "unsw"
+    }
+  ],
+  "work": [
+    {
+      "name": "Lithologist",
+      "full": "Petroleum Lithologist, Gubkin Lithology Dept",
+      "from": 2015.75,
+      "to": 2019.4,
+      "org": "gubkin",
+      "pattern": "brick",
+      "key": true,
+      "short": "Lithologist, Gubkin"
+    },
+    {
+      "name": "Rosneft",
+      "full": "Rosneft, oilfield internship",
+      "from": 2017.45,
+      "to": 2017.65,
+      "org": "rosneft",
+      "pattern": "gravel"
+    },
+    {
+      "name": "Rosneft",
+      "full": "Rosneft, oilfield internship",
+      "from": 2018.45,
+      "to": 2018.65,
+      "org": "rosneft",
+      "pattern": "gravel"
+    },
+    {
+      "name": "DP intern",
+      "full": "Digital Petroleum, CV Intern",
+      "from": 2020.42,
+      "to": 2020.67,
+      "org": "dp",
+      "pattern": "hatch"
+    },
+    {
+      "name": "Digital Petroleum",
+      "full": "Digital Petroleum, Lead UI/UX Designer",
+      "from": 2020.67,
+      "to": 2022.67,
+      "detail": "d-dp",
+      "org": "dp",
+      "pattern": "hatch",
+      "thumb": "thumb-dp-v2.webp",
+      "key": true,
+      "short": "UI/UX lead, Digital Petroleum"
+    },
+    {
+      "name": "Skoltech",
+      "full": "Skoltech, CV Intern",
+      "from": 2020.67,
+      "to": 2021.67,
+      "detail": "d-microct",
+      "org": "skoltech",
+      "main": true,
+      "color": "--ics-cretaceous"
+    },
+    {
+      "name": "Skoltech",
+      "full": "Skoltech, Junior CV Researcher",
+      "from": 2021.67,
+      "to": 2022.0,
+      "detail": "d-microct",
+      "org": "skoltech",
+      "main": true,
+      "color": "--ics-cretaceous"
+    },
+    {
+      "name": "AIDiagnostic",
+      "full": "AIDiagnostic, Middle CV Engineer",
+      "from": 2022.42,
+      "to": 2023.25,
+      "org": "aid",
+      "pattern": "shale"
+    },
+    {
+      "name": "Skoltech lead",
+      "full": "Skoltech, Lead CV Engineer",
+      "from": 2022.5,
+      "to": 2023.58,
+      "detail": "d-microct",
+      "org": "skoltech",
+      "main": true,
+      "color": "--ics-cretaceous",
+      "thumb": "thumb-microct-v2.webp",
+      "key": true,
+      "short": "Lead CV, Skoltech"
+    },
+    {
+      "name": "Neiro",
+      "full": "Neiro.ai, CV Engineer",
+      "from": 2023.58,
+      "to": 2023.83,
+      "org": "neiro",
+      "pattern": "vert"
+    },
+    {
+      "name": "DentalMesh",
+      "full": "DentalMesh AI, Lead CV Engineer",
+      "from": 2023.75,
+      "to": 2026.92,
+      "detail": "d-dentalmesh",
+      "org": "dentalmesh",
+      "main": true,
+      "color": "--ics-paleogene",
+      "thumb": "thumb-studio-v2.webp",
+      "key": true,
+      "short": "Lead CV, DentalMesh"
+    },
+    {
+      "name": "TA",
+      "full": "UNSW, Teaching Assistant, Seismic Imaging",
+      "from": 2025.33,
+      "to": 2025.6,
+      "org": "unsw",
+      "pattern": "cross"
+    },
+    {
+      "name": "BorneoLand",
+      "full": "BorneoLand AI, Lead CV Engineer",
+      "from": 2025.92,
+      "to": 2026.82,
+      "current": true,
+      "detail": "d-orion",
+      "org": "borneoland",
+      "pattern": "sand"
+    },
+    {
+      "name": "Research Officer",
+      "full": "UNSW, Research Officer (UNSW Digital Twin)",
+      "from": 2026.34,
+      "to": 2026.82,
+      "current": true,
+      "detail": "d-twin",
+      "org": "unsw",
+      "main": true,
+      "color": "--ics-quaternary",
+      "thumb": "thumb-twin-v2.webp",
+      "key": true,
+      "short": "UNSW Digital Twin"
+    },
+    {
+      "name": "Expedition DS",
+      "full": "Expedition Data Science hackathon, Geophysics Expert",
+      "org": "expds",
+      "pattern": "shale",
+      "from": 2026.21,
+      "to": 2026.82,
+      "current": true
+    },
+    {
+      "name": "PELE TA",
+      "full": "UNSW, Teaching Assistant, Personalised English Language Enhancement (PELE)",
+      "org": "unsw",
+      "pattern": "cross",
+      "from": 2024.7,
+      "to": 2024.92
+    }
+  ],
+  "events": [
+    {
+      "t": 2026.82,
+      "kind": "paper",
+      "text": "ASEG DISCOVER talk",
+      "note": "label-efficient fault detection",
+      "detail": "d-aseg",
+      "org": "unsw",
+      "thumb": "thumb-fault-v2.webp",
+      "key": true,
+      "short": "ASEG DISCOVER talk"
+    },
+    {
+      "t": 2026.6,
+      "kind": "award",
+      "text": "Student bursary, ASEG DISCOVER 2026",
+      "org": "unsw"
+    },
+    {
+      "t": 2026.6,
+      "kind": "milestone",
+      "text": "kuja:r goes on sale"
+    },
+    {
+      "t": 2026.54,
+      "kind": "paper",
+      "text": "Talk at RIIS Hub research training",
+      "org": "unsw"
+    },
+    {
+      "t": 2025.85,
+      "kind": "milestone",
+      "text": "Co-founded kuja:r, a travel thermos for Yakutia"
+    },
+    {
+      "t": 2025.69,
+      "kind": "paper",
+      "text": "AEGC 2025 poster, Perth",
+      "note": "synthetic data for seismic imaging",
+      "detail": "d-phd",
+      "org": "unsw",
+      "key": true,
+      "short": "AEGC 2025 poster"
+    },
+    {
+      "t": 2024.73,
+      "kind": "milestone",
+      "text": "CAGE 2024 field camp, Western Australia",
+      "note": "ASEG Camp for Applied Geophysics Excellence",
+      "org": "unsw"
+    },
+    {
+      "t": 2024.36,
+      "kind": "milestone",
+      "text": "PhD starts, UNSW Sydney",
+      "note": "RIIS Hub scholarship",
+      "detail": "d-phd",
+      "org": "unsw",
+      "start": true,
+      "key": true,
+      "short": "PhD, UNSW"
+    },
+    {
+      "t": 2022.85,
+      "kind": "paper",
+      "text": "Xe-enhanced CT of sub-resolved pores",
+      "note": "Fuel",
+      "href": "https://www.sciencedirect.com/science/article/abs/pii/S0016236122021093",
+      "org": "skoltech"
+    },
+    {
+      "t": 2022.7,
+      "kind": "paper",
+      "text": "TatOilExpo 2022, Kazan",
+      "note": "digital core models",
+      "detail": "d-microct",
+      "org": "skoltech"
+    },
+    {
+      "t": 2021.75,
+      "kind": "paper",
+      "text": "4 papers on SEM and core images",
+      "note": "SPE, EAGE, ProGREss'21, DSOG",
+      "detail": "d-papers2021",
+      "org": "skoltech",
+      "key": true,
+      "short": "4 papers on core images"
+    },
+    {
+      "t": 2020.87,
+      "kind": "milestone",
+      "text": "Aramco Upstream Technathon 2020",
+      "note": "digital rock from 2D images",
+      "org": "skoltech"
+    },
+    {
+      "t": 2019.67,
+      "kind": "milestone",
+      "text": "MSc starts, Skoltech",
+      "org": "skoltech",
+      "start": true,
+      "key": true,
+      "short": "MSc, Skoltech"
+    },
+    {
+      "t": 2019.6,
+      "kind": "award",
+      "text": "1st place, Skoltech Innovation Workshop",
+      "org": "skoltech"
+    },
+    {
+      "t": 2019.45,
+      "kind": "milestone",
+      "text": "Graduation project",
+      "note": "Botuobi horizon heterogeneity",
+      "org": "gubkin"
+    },
+    {
+      "t": 2018.25,
+      "kind": "paper",
+      "text": "Machine Learning in Geology",
+      "org": "gubkin",
+      "key": true,
+      "short": "ML in Geology"
+    },
+    {
+      "t": 2018.2,
+      "kind": "paper",
+      "text": "Lithology of the Indigiro-Zyryansk deflection",
+      "org": "gubkin"
+    },
+    {
+      "t": 2017.3,
+      "kind": "award",
+      "text": "1st place, GeoContest by EAGE",
+      "org": "gubkin"
+    },
+    {
+      "t": 2016.6,
+      "kind": "milestone",
+      "text": "Geological mapping, Crimea",
+      "org": "gubkin"
+    },
+    {
+      "t": 2016.15,
+      "kind": "paper",
+      "text": "Concretions of the Tabaga Cape, continued",
+      "org": "gubkin"
+    },
+    {
+      "t": 2015.3,
+      "kind": "paper",
+      "text": "Route in the Lena Pillars National Park",
+      "org": "gubkin"
+    },
+    {
+      "t": 2014.67,
+      "kind": "milestone",
+      "text": "Petroleum Geology starts, Gubkin",
+      "org": "gubkin",
+      "start": true
+    },
+    {
+      "t": 2014.1,
+      "kind": "paper",
+      "text": "Concretions of the Tabaga Cape",
+      "note": "first conference paper",
+      "org": "gubkin",
+      "key": true,
+      "short": "First paper: Tabaga Cape"
+    }
+  ],
+  "orgs": {
+    "unsw": {
+      "name": "UNSW Sydney",
+      "logo": "logo-unsw.png",
+      "ratio": 2.4
+    },
+    "skoltech": {
+      "name": "Skoltech",
+      "logo": "logo-skoltech.png",
+      "ratio": 6.0
+    },
+    "rosneft": {
+      "name": "Rosneft",
+      "logo": "logo-rosneft.png",
+      "ratio": 1.45
+    },
+    "dp": {
+      "name": "Digital Petroleum",
+      "logo": "logo-dp.png",
+      "ratio": 1.65
+    },
+    "dentalmesh": {
+      "name": "DentalMesh AI",
+      "logo": "logo-dentalmesh.png",
+      "ratio": 6.11
+    },
+    "borneoland": {
+      "name": "BorneoLand AI",
+      "logo": "logo-borneoland.png",
+      "ratio": 4.84
+    },
+    "gubkin": {
+      "name": "Gubkin University"
+    },
+    "aid": {
+      "name": "AIDiagnostic"
+    },
+    "neiro": {
+      "name": "Neiro.ai"
+    },
+    "expds": {
+      "name": "Expedition Data Science"
+    }
+  },
+  "eras": [
+    {
+      "name": "Petrozoic",
+      "note": "geology",
+      "from": 2013.6,
+      "to": 2019.67,
+      "color": "--ics-paleozoic"
+    },
+    {
+      "name": "Digitozoic",
+      "note": "digital rock & computer vision",
+      "from": 2019.67,
+      "to": 2023.75,
+      "color": "--ics-mesozoic"
+    },
+    {
+      "name": "Neurozoic",
+      "note": "3D AI for subsurface & medicine",
+      "from": 2023.75,
+      "to": 2027.3,
+      "color": "--ics-cenozoic"
+    }
+  ]
+}
+</script>
+  </section>
+
+  <script>
+  // Geochron, scrollytelling: a one-screen column sticks on the left, chapters scroll on the right.
+  // The chapter in the middle of the screen moves the time marker and lights up its layers.
+  (function () {
+    const data = JSON.parse(document.getElementById('geo-data').textContent);
+    const root = document.getElementById('geo'), head = document.getElementById('geo-head'), stick = document.getElementById('geo-stick');
+    const chaptersEl = document.getElementById('geo-chapters');
+    const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const fmt = (t) => Math.floor(t + 1e-6);
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = (t) => MONTHS[Math.min(11, Math.floor((t - Math.floor(t)) * 12))] + ' ' + Math.floor(t);
+    const orgs = data.orgs;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Accessible list, same data
+    const list = document.getElementById('geo-list');
+    [...data.education, ...data.work].sort((a, b) => b.from - a.from).forEach((d) => {
+      const li = document.createElement('li');
+      li.textContent = `${fmt(d.from)}–${d.current ? 'now' : fmt(d.to)}: ${d.full || d.name}`;
+      list.append(li);
+    });
+
+    // Uneven time scale: before 2019 a year takes half the height of a recent year.
+    const weight = (t) => (t < 2019 ? 0.5 : t < 2023 ? 0.75 : 1);
+    function dist(a, b) {
+      let s = 0, x = a;
+      for (const br of [2019, 2023, Infinity]) {
+        if (x >= b) break;
+        const e = Math.min(b, br);
+        if (e > x) { s += (e - x) * weight(x); x = e; }
+      }
+      return s;
+    }
+    // Lithology patterns for jobs that are not main ones, as in a core log legend.
+    const PATTERN_SVG = {
+      brick: '<path d="M0 .5H12M0 6.5H12M3 .5V6.5M9 6.5V12" stroke-width=".8" fill="none"/>',
+      hatch: '<path d="M-3 3L3 -3M0 12L12 0M9 15L15 9" stroke-width=".9"/>',
+      shale: '<path d="M1 3H6M7 9H11" stroke-width="1"/>',
+      sand: '<g stroke="none"><circle cx="3" cy="3" r=".9"/><circle cx="9" cy="6" r=".9"/><circle cx="4" cy="10" r=".9"/></g>',
+      gravel: '<g fill="none" stroke-width=".8"><circle cx="3" cy="4" r="2"/><circle cx="9" cy="9" r="2"/></g>',
+      vert: '<path d="M3 0V12M9 0V12" stroke-width=".8"/>',
+      cross: '<path d="M6 3V9M3 6H9" stroke-width=".9"/>',
+    };
+    const patternUrl = (name, ink) => `url("data:image/svg+xml,${encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" stroke="${ink}" fill="${ink}">${PATTERN_SVG[name]}</svg>`)}")`;
+    // Jobs shorter than this are drawn as lenses inside the column instead of taking a share of it.
+    const isShort = (d) => !d.main && d.to - d.from < 0.4;
+    // Split time into intervals; in each one, the jobs running then share the column width equally.
+    function cuttings(items) {
+      const bps = [...new Set(items.flatMap((d) => [d.from, d.to]))].sort((a, b) => a - b);
+      const out = [];
+      for (let i = 0; i + 1 < bps.length; i++) {
+        const a = bps[i], b = bps[i + 1];
+        const act = items.filter((d) => d.from <= a + 1e-6 && d.to >= b - 1e-6)
+          .sort((p, q) => (!!q.main - !!p.main) || (p.from - q.from));
+        if (act.length) out.push({ a, b, act });
+      }
+      return out;
+    }
+    function logo(org, h) {
+      const o = orgs[org];
+      if (!o || !o.logo) return '';
+      return `<img class="geo-logo" src="${o.logo}" alt="${o.name}" width="${Math.round(h * o.ratio)}" height="${Math.round(h)}">`;
+    }
+
+    // All events, newest first. Job starts count as events so every role has a date mark.
+    const allEvents = [
+      ...data.events,
+      ...data.work.filter((d) => d.name !== 'Rosneft' || d.from < 2018).map((d) => ({
+        t: d.from, kind: 'work', org: d.org, detail: d.detail, thumb: d.thumb, key: d.key, short: d.short,
+        text: d.full.replace(', oilfield internship', ', two oilfield internships')
+      }))
+    ].sort((a, b) => b.t - a.t);
+    const keys = allEvents.filter((e) => e.key);
+
+    // Full posts live on their own pages.
+    const POSTS = { 'd-phd': 'phd', 'd-aseg': 'phd', 'd-microct': 'microct', 'd-papers2021': 'microct', 'd-dentalmesh': 'dentalmesh', 'd-twin': 'twin', 'd-dp': 'dp', 'd-orion': 'orion' };
+    const postUrl = (id) => (POSTS[id] ? `post-${POSTS[id]}.html` : null);
+
+    // Chapters: one per key point, built from the project templates.
+    const used = new Set();
+    keys.forEach((e, k) => {
+      const tpl = e.detail && document.getElementById(e.detail);
+      const src = document.createElement('div');
+      const repeat = tpl && used.has(e.detail);
+      if (tpl && !repeat) { src.append(tpl.content.cloneNode(true)); used.add(e.detail); }
+      const meta = src.querySelector('.project-meta');
+      const title = src.querySelector('h3');
+      const lead = src.querySelector('p:not(.result)'), result = src.querySelector('p.result');
+      const fig = src.querySelector('img.figure');
+      const chips = src.querySelector('.chips, .paper-list');
+      const newer = k > 0 ? keys[k - 1].t : Infinity;
+      const also = allEvents.filter((x) => !x.key && x.t >= e.t && x.t < newer).sort((a, b) => a.t - b.t);
+      const o = orgs[e.org];
+      const url = postUrl(e.detail);
+      const sec = document.createElement('article');
+      sec.className = 'geo-chapter ' + e.kind;
+      sec.dataset.k = k; sec.dataset.kind = e.kind;
+      if (e.org) sec.dataset.org = e.org;
+      sec.innerHTML = `
+        <div class="geo-chapter-meta">${logo(e.org, 20)}<span class="mono">${meta ? [...meta.children].map((x) => x.textContent.trim()).join(' · ') : [o && o.name, month(e.t)].filter(Boolean).join(' · ')}</span></div>
+        <h3>${repeat || !title ? (e.text + (e.note ? `: ${e.note}` : '')) : title.textContent}</h3>
+        ${lead ? `<p class="geo-lead">${lead.innerHTML}</p>` : (!repeat && e.note ? `<p class="geo-lead">${e.note}</p>` : '')}${result ? result.outerHTML : ''}
+        ${chips && !repeat ? chips.outerHTML : ''}
+        ${fig ? `<figure><img src="${fig.getAttribute('src')}" alt="${fig.getAttribute('alt')}" loading="lazy"></figure>` : e.thumb && !repeat ? `<figure><img src="${e.thumb}" alt="" loading="lazy"></figure>` : ''}
+        ${also.length ? `<p class="geo-also"><b>Also then</b> ${also.map((x) => `<span class="${x.kind}">${x.text}</span>`).join(' · ')}</p>` : ''}
+        <div class="geo-chapter-links">${url ? `<a class="chip geo-post" href="${url}">Read the full post →</a>` : ''}${e.href ? `<a class="chip" href="${e.href}" target="_blank" rel="noopener">Paper ↗</a>` : ''}</div>`;
+      chaptersEl.append(sec);
+    });
+    const chapters = [...chaptersEl.querySelectorAll('.geo-chapter')];
+
+    let geom = null, active = -1;
+
+    function draw() {
+      const pad = parseFloat(getComputedStyle(stick).paddingTop) + parseFloat(getComputedStyle(stick).paddingBottom);
+      const W = root.clientWidth, Hs = stick.clientHeight - pad - head.offsetHeight - parseFloat(getComputedStyle(head).marginBottom) - 4;
+      if (!W || Hs < 100) return;
+      const narrow = W < 200;
+      const [t0, t1] = data.range;
+      const ppy = Hs / dist(t0, t1);
+      const y = (t) => dist(Math.min(Math.max(t, t0), t1), t1) * ppy;
+      const eraW = narrow ? 0 : 22, axisW = narrow ? 24 : 36, eduW = narrow ? 22 : 64, gap = narrow ? 3 : 6;
+      const xAxis = eraW ? eraW + 4 : 0, xEdu = xAxis + axisW, xLane = xEdu + eduW + gap;
+      const workW = Math.max(10, Math.floor(W - xLane - gap - 18));
+      const xRail = xLane + workW + gap + 10;
+
+      root.innerHTML = '';
+      root.style.height = Hs + 'px';
+      const add = (cls, style, html = '', title = '') => {
+        const el = document.createElement('div');
+        el.className = cls; Object.assign(el.style, style); el.innerHTML = html;
+        if (title) el.title = title;
+        root.append(el); return el;
+      };
+      const linkable = (el, d) => {
+        if (d.org) el.dataset.org = d.org;
+        if (!d.detail) return;
+        el.dataset.detail = d.detail; el.classList.add('has-detail');
+        el.tabIndex = 0; el.setAttribute('role', 'button');
+      };
+
+      head.innerHTML = '';
+      (narrow ? [] : [['Era', 0], ['Age', xAxis], ['Study', xEdu], ['Work', xLane]]).forEach(([s, x]) => {
+        const sp = document.createElement('span'); sp.textContent = s; sp.style.left = x + 'px'; head.append(sp);
+      });
+
+      if (eraW) data.eras.forEach((d) => {
+        const top = y(Math.min(d.to, t1)), h = y(d.from) - top;
+        add('geo-era', { left: '0px', top: top + 'px', width: eraW + 'px', height: (h - 2) + 'px', background: css(d.color) },
+          h > d.name.length * 8 + 10 ? `<b>${d.name}</b>` : '', `${d.name}: ${d.note}`);
+      });
+
+      for (let yr = Math.ceil(t0); yr <= Math.floor(t1); yr++) {
+        add('geo-tick', { left: xAxis + 'px', top: y(yr) + 'px', width: (xRail - xAxis) + 'px' });
+        const spacing = y(yr - 1) - y(yr);
+        if (spacing >= 16 || yr % 2 === 0) add('geo-year', { left: xAxis + 'px', top: y(yr) + 'px' }, String(yr));
+      }
+
+      const fits = (h, w, text) => h > text.length * 6.5 + 12 && w >= 18;
+      data.education.forEach((d) => {
+        const top = y(Math.min(d.to, t1)), h = y(d.from) - top;
+        const bar = add('geo-bar edu', { left: xEdu + 'px', top: top + 'px', width: eduW + 'px', height: h + 'px', background: css(d.color) },
+          fits(h, eduW, d.name) && !narrow ? `<b>${d.name}</b>` : '', `${d.full || d.name}: ${fmt(d.from)}–${fmt(d.to)}`);
+        if (d.to > t1) bar.style.maskImage = bar.style.webkitMaskImage = 'linear-gradient(to bottom, transparent, #000 24px)';
+        linkable(bar, d);
+      });
+
+      const fill = (d) => (d.main ? { background: css(d.color) }
+        : { backgroundColor: css('--geo-work'), backgroundImage: patternUrl(d.pattern, css('--geo-work-ink')) });
+      const tip = (d) => `${d.full}: ${fmt(d.from)}–${d.current ? 'now' : fmt(d.to)}`;
+      const tallest = new Map();
+      cuttings(data.work.filter((d) => !isShort(d))).forEach((s) => {
+        const top = y(Math.min(s.b, t1)), h = y(s.a) - top, w = workW / s.act.length;
+        s.act.forEach((d, i) => {
+          const bar = add('geo-bar work ' + (d.main ? 'main' : 'minor'), {
+            left: (xLane + i * w) + 'px', top: top + 'px', width: Math.max(2, w - 1) + 'px', height: h + 'px', ...fill(d)
+          }, '', tip(d));
+          linkable(bar, d);
+          if (!tallest.has(d) || h > tallest.get(d).h) tallest.set(d, { bar, h, w });
+        });
+      });
+      // Name each job once, on its tallest piece.
+      if (!narrow) tallest.forEach(({ bar, h, w }, d) => { if (fits(h, w, d.name)) bar.innerHTML = `<b>${d.name}</b>`; });
+      data.work.filter(isShort).forEach((d) => {
+        const cy = (y(d.from) + y(d.to)) / 2, ry = Math.max(4, (y(d.from) - y(d.to)) / 2 + 1.5);
+        const lens = add('geo-bar work minor lens', {
+          left: (xLane + workW * 0.64) + 'px', top: (cy - ry) + 'px', width: (workW * 0.32) + 'px', height: (2 * ry) + 'px', ...fill(d)
+        }, '', tip(d));
+        linkable(lens, d);
+      });
+
+      // Rail with a dot per key point; the other events are listed in the chapters.
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('class', 'geo-lines');
+      root.append(svg);
+      const rail = document.createElementNS(svgNS, 'path');
+      rail.setAttribute('d', `M${xRail} 0 L${xRail} ${Hs}`); rail.setAttribute('stroke', css('--rule')); svg.append(rail);
+      const colors = { paper: '--live', work: '--geo-work-ink', award: '--pen', milestone: '--ink' };
+      keys.forEach((e) => {
+        const dot = document.createElementNS(svgNS, 'circle');
+        dot.setAttribute('cx', xRail); dot.setAttribute('cy', y(e.t)); dot.setAttribute('r', 5);
+        dot.dataset.k = keys.indexOf(e); dot.setAttribute('class', 'geo-keydot');
+        const tt = document.createElementNS(svgNS, 'title'); tt.textContent = e.short || e.text; dot.append(tt);
+        dot.setAttribute('fill', css(colors[e.kind]));
+        if (e.org) dot.dataset.org = e.org;
+        svg.append(dot);
+      });
+
+      add('geo-now', { left: xEdu + 'px', top: y(data.now) + 'px', width: (xRail - xEdu) + 'px' }, narrow ? '' : '<span>now</span>');
+      const marker = add('geo-marker', { left: xAxis + 'px', width: (xRail + 6 - xAxis) + 'px' });
+      const pill = add('geo-pill', { left: xEdu + 'px' });
+      geom = { y, marker, pill, narrow };
+      if (active >= 0) { litOrg = null; place(active); }  // the redraw dropped the highlight, so apply it again
+    }
+
+    // Marker and highlight follow the active chapter.
+    let litOrg = null;
+    function setLit(org) {
+      if (org === litOrg) return;
+      litOrg = org;
+      root.classList.toggle('dim', !!org);
+      root.querySelectorAll('.lit').forEach((e) => e.classList.remove('lit'));
+      if (org) root.querySelectorAll(`[data-org="${org}"]`).forEach((e) => e.classList.add('lit'));
+    }
+    function place(k) {
+      const e = keys[k];
+      if (!geom || !e) return;
+      const t = e.t, py = geom.y(t);
+      geom.marker.style.top = py + 'px';
+      const during = (list) => list.filter((d) => d.from <= t + 1e-6 && t < (d.current ? data.now + 1 : d.to) && d.name !== 'High school').map((d) => d.name).join(', ');
+      const study = during(data.education), job = during(data.work);
+      geom.pill.textContent = [month(t), !geom.narrow && study && '🎓 ' + study, !geom.narrow && job && '💼 ' + job].filter(Boolean).join(' · ');
+      geom.pill.style.top = (py - geom.pill.offsetHeight - 4) + 'px';
+      setLit(e.org || null);
+    }
+    function activate(k) {
+      if (k === active) return;
+      active = k;
+      chapters.forEach((c, i) => c.classList.toggle('is-active', i === k));
+      place(k);
+    }
+    // A chapter stays active until the heading of the next one rises to the reading line
+    // (upper third of the screen), so you can finish its last lines before it fades.
+    let pickQueued = false;
+    function pickActive() {
+      pickQueued = false;
+      const line = window.innerHeight * 0.38;
+      let pick = -1;
+      chapters.forEach((c, i) => {
+        if (c.hidden) return;
+        if (pick < 0) pick = i;
+        const head = c.querySelector('.geo-chapter-meta') || c;
+        if (head.getBoundingClientRect().top <= line) pick = i;
+      });
+      if (pick >= 0) activate(pick);
+    }
+    const queuePick = () => { if (!pickQueued) { pickQueued = true; requestAnimationFrame(pickActive); } };
+    window.addEventListener('scroll', queuePick, { passive: true });
+    window.addEventListener('resize', queuePick);
+    queuePick();
+
+    // Hover a layer: light up its organisation; leaving restores the active chapter.
+    root.addEventListener('pointerover', (ev) => { const t = ev.target.closest('[data-org]'); setLit(t ? t.dataset.org : (keys[active] && keys[active].org) || null); });
+    root.addEventListener('pointerleave', () => setLit((keys[active] && keys[active].org) || null));
+
+    // Click a layer: jump to its chapter, or open the post when there is no chapter for it.
+    function openLayer(id) {
+      const k = keys.findIndex((e) => e.detail === id);
+      if (k >= 0) chapters[k].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      else if (postUrl(id)) window.location.href = postUrl(id);
+    }
+    const goChapter = (k) => { if (chapters[k] && !chapters[k].hidden) chapters[k].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); };
+    root.addEventListener('click', (ev) => {
+      const dot = ev.target.closest('.geo-keydot');
+      if (dot) return goChapter(+dot.dataset.k);
+      const b = ev.target.closest('[data-detail]'); if (b) openLayer(b.dataset.detail);
+    });
+    // Keyboard: j/k and the arrow keys step between chapters while the timeline is on screen.
+    document.addEventListener('keydown', (ev) => {
+      if ((ev.target.closest && ev.target.closest('input, textarea, select, [contenteditable]')) || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+      const down = ev.key === 'j' || ev.key === 'ArrowDown', up = ev.key === 'k' || ev.key === 'ArrowUp';
+      if (!down && !up) return;
+      const r = chaptersEl.getBoundingClientRect();
+      if (r.top > window.innerHeight / 2 || r.bottom < window.innerHeight / 2) return;
+      const visible = chapters.map((c, i) => i).filter((i) => !chapters[i].hidden);
+      const pos = visible.indexOf(active), next = visible[pos + (down ? 1 : -1)];
+      if (next === undefined) return;
+      ev.preventDefault();
+      goChapter(next);
+    });
+    root.addEventListener('keydown', (ev) => {
+      const b = ev.target.closest('[role="button"][data-detail]');
+      if (b && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); openLayer(b.dataset.detail); }
+    });
+
+    let lastW = 0, lastH = 0;
+    new ResizeObserver(() => {
+      if (root.clientWidth !== lastW || stick.clientHeight !== lastH) { lastW = root.clientWidth; lastH = stick.clientHeight; draw(); }
+    }).observe(stick);
+    document.fonts && document.fonts.ready.then(draw);
+  })();
+  </script>
+
+  <footer>
+    <span class="sign">— Vlad</span>
+    <span>Sydney, Australia · <span class="mono">vv4alekseev@gmail.com</span></span>
+  </footer>
+</main>
+
+
+</body>
+</html>

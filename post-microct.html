@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Digital rock from core micro-CT · Vladislav Alekseev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="post.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="back" href="./">← Timeline</a>
+  <a class="me" href="./"><img src="photo.jpg" alt="" width="32" height="32">Vladislav Alekseev</a>
+</div></header>
+<main class="wrap">
+  <article class="post">
+    <div class="post-meta"><img class="logo" src="logo-skoltech.png" alt="Skoltech" height="22" width="132"><span>Skoltech · CV Intern → Junior Researcher → Lead CV Engineer · 2020–2023</span></div>
+    <h1>Digital rock from core micro-CT</h1>
+    
+    <p class="lede">At Skoltech I built the image side of a digital rock workflow: micro-CT, SEM and QEMSCAN images of core turned into 3D multi-mineral models that flow simulators can use to estimate the permeability of tight, microporous rock. I joined as an intern in 2020 and led the computer vision team from 2022 to 2023, working remotely from Yerevan.</p>
+
+<section>
+<h2>The problem</h2>
+<p>Digital rock physics estimates petrophysical properties from images of core, quickly and without destroying the sample. It has two stages: build a model of the rock from images, then simulate flow on that model. The first stage is where tight rock breaks the usual recipe.</p>
+<p>Three issues made it hard. First, many pores in tight sandstone are smaller than a micro-CT voxel. A model built from a dry CT scan misses them and loses the pore connectivity that a permeability calculation needs. Second, classical thresholding and marker-based segmentation cannot separate minerals with similar grey levels, so they do not give usable mineral maps. Third, each instrument sees a different slice of the truth. Micro-CT is 3D at micrometre scale, SEM is 2D and resolves features down to 250 nm, and QEMSCAN gives 2D mineral labels. Combining them means aligning images that differ in dimension, scale and contrast.</p>
+</section>
+
+<section>
+<h2>Approach</h2>
+<p>The pipeline runs from microanalysis results (micro-CT, SEM, FIB-SEM, mineral maps) through image processing to a digital core model (binary, multi-mineral, multi-scale). That model feeds a multiphase simulator (pore network, lattice Boltzmann, Navier-Stokes or Navier-Stokes-Brinkman) to predict core properties such as residual water and oil saturation, displacement factor and relative permeability.</p>
+<p><strong>Denoising.</strong> I applied Deep Image Prior and GAN-based denoising to micro-CT, alongside classical filters, and ran a statistical comparison of deep learning against classical methods to decide what to use downstream.</p>
+<p><strong>Multi-mineral segmentation.</strong> I trained U-Net, LinkNet and ResUNet with several pretrained backbones, plus a pix2pix GAN, to predict mineral maps from SEM images of arkose sandstone from the Achimov formation. The dataset paired SEM images with SEM-EDS mineral maps. A combined Dice and Focal loss handled the strong class imbalance, and U-Net with an EfficientNet-B4 backbone was the most suitable model.</p>
+<p><strong>Registration.</strong> I implemented slice-to-slice, slice-to-volume and volume-to-volume registration so that SEM and QEMSCAN sections could be placed inside the CT volume and several CT scans of the same sample could be aligned with each other. A small web application exposed 2D-2D registration with preprocessing, transform type and interpolator settings. Later I added a coarse-to-fine pre-registration step with multi-resolution matching, which made registration ten times faster.</p>
+<p><strong>Sub-resolved porosity.</strong> On a tight sandstone, the team scanned the sample dry and again after saturating it with xenon. A hybrid processing method then labelled each voxel as solid, pore or porous, which gives a model for permeability with the Stokes-Brinkman equation. This became the Fuel paper and a public dataset.</p>
+</section>
+
+<section>
+<h2>Results</h2>
+<figure><img src="micro-ct-v2.webp" alt="The same rock sample in SEM, micro-CT, xenon-enhanced CT and a QEMSCAN mineral map" width="1600" height="1000"><figcaption>One rock sample in four views: SEM, micro-CT in air, xenon-enhanced micro-CT and the QEMSCAN mineral map that thresholding cannot reproduce.</figcaption></figure>
+<figure><img src="schematic-microct.webp" alt="Diagram of the digital rock pipeline from imaging to flow simulation" width="1600" height="1000"><figcaption>The digital rock pipeline: imaging, image processing, registration, CNN mineral segmentation, a digital core model and flow simulation to core characteristics.</figcaption></figure>
+<figure><img src="post-microct-2-v2.webp" alt="A micro-CT volume with a slice matched to SEM and QEMSCAN images, next to a web application for 2D-2D registration showing fixed, moving and overlay images" width="1600" height="569"><figcaption>Registration across modalities and scales: micro-CT, SEM and QEMSCAN, and the web app for 2D–2D registration.</figcaption></figure>
+<ul>
+<li>Registration became ten times faster after the coarse-to-fine pre-registration step.</li>
+<li>The xenon-enhanced CT method was published in Fuel in 2022, with the CT data released openly.</li>
+</ul>
+</section>
+
+<section>
+<h2>My role</h2>
+<p>Computer Vision Intern (September 2020 to September 2021) and Junior Computer Vision Researcher (September to December 2021) in Moscow. I built the preprocessing, denoising, segmentation and registration parts of the pipeline and evaluated the models.</p>
+<p>Lead Computer Vision Engineer (July 2022 to July 2023), remote from Yerevan. I supervised a team of engineers working on image processing, registration, model training and evaluation, and flow simulation on porosity and mineral models, and I designed the faster pre-registration scheme.</p>
+</section>
+
+<section>
+<h2>Stack</h2>
+<ul class="chips">
+<li>Python</li>
+<li>PyTorch</li>
+<li>U-Net, LinkNet, ResUNet</li>
+<li>pix2pix GAN</li>
+<li>Deep Image Prior</li>
+<li>Multi-resolution image registration</li>
+<li>Micro-CT, SEM, SEM-EDS, QEMSCAN</li>
+<li>Stokes-Brinkman flow</li>
+</ul>
+</section>
+
+<section>
+<h2>Outputs</h2>
+<ul>
+<li><a href="https://doi.org/10.2118/206526-MS">Multi-mineral segmentation of SEM images using deep learning techniques</a>. SPE Russian Petroleum Technology Conference, October 2021. First author.</li>
+<li><a href="https://www.earthdoc.org/content/papers/10.3997/2214-4609.202159046">Mineral mapping of rock micro-images using computer vision and deep learning methods</a>. ProGREss'21. First author.</li>
+<li><a href="https://doi.org/10.1016/j.fuel.2022.125274">Lift the veil of secrecy in sub-resolved pores by Xe-enhanced computed tomography</a>. Fuel, volume 328, 2022. Co-author.</li>
+<li><a href="https://doi.org/10.17632/hgxdh8ps94.1">Xe-enhanced computed tomography, tight sandstone</a>. Open dataset on Mendeley Data, 2022. Co-author.</li>
+<li><a href="https://www.earthdoc.org/content/papers/10.3997/2214-4609.202112886">An intellectual system for fast and reliable automated core description development</a>. 82nd EAGE Annual Conference, 2021. Co-author.</li>
+<li><a href="https://www.earthdoc.org/content/papers/10.3997/2214-4609.202156016">Automated full-bore core description application for production purposes. From an idea to IT-product</a>. Data Science in Oil and Gas 2021. Co-author.</li>
+<li>Talk: Automated full-bore core description system application in production. Use case example. Ways to Realize the Oil and Gas Potential of Western Siberia, Khanty-Mansiysk, January 2022. Co-author.</li>
+<li>Exhibition presentation: Digital core models for complex low-permeable rocks using deep learning techniques. TatOilExpo 2022, Kazan, September 2022.</li>
+<li>Hackathon: <a href="https://github.com/ddvika/Aramco_technathon_2020">Aramco Upstream Solutions Technathon 2020</a>, team of three. Task: reconstruct 3D digital rock models from 2D images. In the first week we proposed a fully unsupervised segmentation method, binarised all provided CT images and predicted porosity.</li>
+</ul>
+</section>
+
+  </article>
+</main>
+<footer class="wrap"><a class="back" href="./">← Back to the timeline</a><span class="sign">— Vlad</span></footer>
+</body>
+</html>

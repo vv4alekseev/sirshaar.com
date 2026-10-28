@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PhD research: deep learning for seismic interpretation · Vladislav Alekseev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="post.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="back" href="./">← Timeline</a>
+  <a class="me" href="./"><img src="photo.jpg" alt="" width="32" height="32">Vladislav Alekseev</a>
+</div></header>
+<main class="wrap">
+  <article class="post">
+    <div class="post-meta"><img class="logo" src="logo-unsw.png" alt="UNSW Sydney" height="22" width="53"><span>UNSW Sydney · PhD in Geophysics · 2024–2028</span></div>
+    <h1>PhD research: deep learning for seismic interpretation</h1>
+    
+    <p class="lede">My PhD in Geophysics at UNSW Sydney (May 2024 to June 2028) asks how to make deep learning useful for seismic interpretation when expert labels are scarce. One strand trains fault detectors with a tenth of the labels by pre-training on the unlabelled survey. The other finds where 3D relative geologic time (RGT) networks trained on synthetics break on real data. Both rest on synthetic training data, so I also work on making that data geologically realistic, physics-based and matched to real surveys.</p>
+
+<section>
+<h2>The big picture</h2>
+<p>The thesis is called "Fusing Geophysical Datasets to Characterize Rock Mass From Multiple Datasets using Deep Learning Algorithms". Finding oil and gas is slow, expensive and uncertain. An offshore exploration well now costs more than A$130 million on average, it takes over seven years to get from a first hypothesis to drilling, and only about one high-impact well in five is a commercial success.</p>
+<p>The aim is one deep learning framework that reads seismic, well logs and core images together and returns rock properties such as porosity, permeability and saturation, with maps of how uncertain they are. Physical constraints keep the predictions consistent with rock physics.</p>
+<figure><img src="schematic-phd.webp" alt="Diagram: seismic, well logs and core images feed CNN or transformer models and a physics-informed network. These build a structural model of horizons and faults and a facies model, which feed a petrophysical model that outputs porosity, permeability, saturation and uncertainty maps." width="1600" height="1000"><figcaption>The framework: synthetic and real data feed deep learning models and a physics-informed network. They build structural and facies models, then a petrophysical model with uncertainty.</figcaption></figure>
+<p>The work runs in four steps:</p>
+<ol>
+<li>Generate synthetic seismic, well logs and rock properties with aligned labels.</li>
+<li>Set a baseline with classical machine learning.</li>
+<li>Classify facies and predict petrophysical properties with physics-informed networks.</li>
+<li>Validate on real data from public Australian and Norwegian archives.</li>
+</ol>
+<p>The fault and RGT work below builds the structural model, and the synthetic data work feeds every step.</p>
+</section>
+
+<section>
+<h2>The problem</h2>
+<p>Expert fault labels are rare, costly and often inconsistent between interpreters. The CRACKS dataset labels the same Netherlands F3 sections with several interpreters and marks every fault as certain or uncertain. The usual workaround is pre-training on synthetic data, with ever more complex generators. Meanwhile the real target survey sits unused because it has no labels.</p>
+<p>RGT has a related gap. An RGT volume gives every voxel a relative age of deposition, so one volume yields all horizons. Deep learning RGT models are trained on synthetic volumes with almost no unconformities and never see real seismic.</p>
+</section>
+
+<section>
+<h2>Approach</h2>
+<figure><img src="schematic-faults.webp" alt="Diagram of survey-conditioned pre-training for fault detection" width="1600" height="1000"><figcaption>Survey-conditioned pre-training: two label-free routes on the unlabelled survey, fine-tuning on a few expert labels, then recall measured separately on certain and uncertain faults.</figcaption></figure>
+<p><strong>Fault detection.</strong> I condition pre-training on the unlabelled survey in two ways. The first is self-supervised: mask whole traces of the real F3 volume and reconstruct them. The second is survey-conditioned synthetics: backgrounds built from real F3 traces from flat, unfaulted bedding, plus a simple fault generator. The fault mask is exact and realism comes from the data, not the generator.</p>
+<p>A U-Net++ (ResNet-50) is then fine-tuned on a few CRACKS labels with a Tversky loss, following the CRACKS benchmark protocol. The model trains on certain faults, and recall is measured separately on certain and uncertain ones. As far as we know, no earlier CRACKS study has split results by annotation confidence.</p>
+<p><strong>RGT.</strong> I ran a systematic evaluation of an existing trained 3D HRNet RGT model (76.8 M parameters, trained on 2,000 synthetic 512³ volumes, accepts sparse horizon picks as guidance). I tested it zero-shot and with three kinds of horizon guidance on held-out Wu synthetics, F3 (unconformities) and Thebe on the North West Shelf of Australia (faults). A memory-lean rewrite of its last decoder block lets a full 400 × 512 × 512 volume run on one 16 GB GPU in 2.2 s.</p>
+</section>
+
+<section>
+<h2>Results</h2>
+<p>The fault numbers are preliminary. The study continues with more seeds, label fractions and a held-out survey.</p>
+<p>At a 10% label budget, both label-free routes barely move Dice (0.285 from scratch, 0.292 self-supervised, 0.295 survey-conditioned). They nearly double recall on interpreter-uncertain faults, from 0.25 to 0.40 and 0.39. Connectivity also improves, with skeleton OIS-F1 rising from 0.56 to 0.61 and 0.65. With 10% of the labels, the survey-conditioned model gets close to training from scratch on all labels (Dice 0.295 against 0.316).</p>
+<figure><img src="post-phd-1-v2.webp" alt="Bar chart of recall on certain and uncertain faults for three pre-training options. Uncertain-fault recall is 0.25 from scratch, 0.40 with self-supervised trace reconstruction and 0.39 with survey-conditioned synthetics." width="1180" height="619"><figcaption>Recall on interpreter-certain and uncertain faults at 10% labels for three pre-training options. Preliminary.</figcaption></figure>
+<figure><img src="fault-detection-v2.webp" alt="F3 CRACKS test section with ground-truth faults, the from-scratch model and the survey-conditioned model. Recovered faults are green and missed faults are red." width="1600" height="1000"><figcaption>F3 CRACKS test section at 10% labels: ground truth, the from-scratch model and the survey-conditioned model on interpreter-certain (top) and uncertain (bottom) faults. Green is recovered, red is missed. Preliminary.</figcaption></figure>
+<p>The RGT model fails exactly at discontinuities. On F3, isochrons run a median 10.8 samples (43 ms) below the Truncation unconformity instead of terminating on it. On Thebe, it breaks the RGT at 92% of fault crossings but restores the wrong throw. Horizons correlate across faults at r = 0.11, against 0.47 for unfaulted pairs, and 33% of crossings skip a cycle. Guidance cuts horizon error on synthetics from 4.05 to 0.74 samples but does not fix the F3 unconformity. A likely cause is that hints enter the network at a quarter of its resolution.</p>
+<figure><img src="post-phd-2-v2.webp" alt="F3 inline 621: seismic section, predicted isochrons without guidance, and predicted isochrons with sparse horizon guidance, overlaid on interpreted horizons including the Truncation unconformity." width="1600" height="459"><figcaption>F3 inline 621: seismic, isochrons of the existing 3D HRNet without guidance and with sparse horizon guidance. The isochrons cross the Truncation unconformity instead of terminating against it.</figcaption></figure>
+<p>The next step is full-resolution guidance, synthetic training data with a hiatus in the RGT label, and self-supervised 3D pre-training on public Australian seismic. For the data I built a workbench that runs seven open geological generators behind one validated contract. Along the way I fixed upstream bugs that silently corrupted training data.</p>
+</section>
+
+<section>
+<h2>Synthetic data that behaves like real geology</h2>
+<p>A growing part of the PhD is about the training data itself. This work is in progress, so here are the directions and a few views rather than results.</p>
+<p><strong>Geological realism.</strong> Synthetic volumes start from a geological model. I compare open generators with the structure of real sedimentary basins and build geomodels with realistic layering, faulting and relative geologic time.</p>
+<figure><img src="phd-geomodel.webp" alt="Four panels of one synthetic section: seismic with fault labels in red, relative geologic time, faulted lithology and P-wave velocity." width="1600" height="558"><figcaption>One synthetic geomodel from an open generator: seismic with fault labels in red, relative geologic time (RGT), faulted lithology and P-wave velocity.</figcaption></figure>
+<figure><img src="phd-styles.webp" alt="Three synthetic seismic sections with different fault styles, and the same sections with their fault labels drawn in red." width="1600" height="1053"><figcaption>Different structural styles on synthetic sections (top) and the fault labels that come with them (bottom).</figcaption></figure>
+<p><strong>Physics-based modelling.</strong> Rock properties are sampled as distributions and passed through rock physics, so the seismic response follows real relations between porosity, clay, fluids, velocity and density. The seismic is then simulated with several engines, from 1D convolution to full wave propagation. I built a seismic viewer to inspect the models layer by layer.</p>
+<figure><img src="phd-rockphysics.webp" alt="Crossplots of acoustic impedance against Vp/Vs, AVO intercept against gradient, Vp against Vs and Vp against density for brine sand, gas sand and caprock shale." width="1600" height="1571"><figcaption>Two layers as distributions: rock-physics template, AVO and QC crossplots for brine sand (blue), gas sand (orange) and caprock shale (grey).</figcaption></figure>
+<figure><img src="phd-wavefield.webp" alt="Seismic viewer showing a wavefield from a centre shot in inline, crossline, depth slice and 3D views of a folded and thrust model." width="1600" height="1282"><figcaption>My seismic viewer: the wavefield from a centre shot moving through a folded and thrust model, shown on an inline, a crossline, a depth slice and in 3D.</figcaption></figure>
+<p><strong>Sim-to-real.</strong> Before training, the generator is tuned so its data match a target survey in spectrum, wavelet, amplitudes, noise and reflector geometry. The model then meets real data it has already seen statistically.</p>
+<figure><img src="phd-spectrum.webp" alt="Amplitude spectra: real F3 sections, synthetics calibrated to F3 that follow the real curve closely, and an uncalibrated generator peaking at a much lower frequency." width="1144" height="704"><figcaption>Amplitude spectrum of real F3 sections (black), synthetics calibrated to F3 (blue) and an uncalibrated fault generator (orange).</figcaption></figure>
+<p><strong>Interpreters in the loop.</strong> I also test how a fault model can take a few edits from an interpreter and carry them across a survey, so a correction in one place improves predictions elsewhere.</p>
+</section>
+
+<section>
+<h2>My role</h2>
+<p>I am the first author of the fault-detection study, supervised by Prof. Stuart Clark and Prof. Ryan Armstrong, with co-authors P. Makuluni and N. Khalili. I designed the study, built the pipeline, ran the experiments and wrote the abstract. On the RGT strand I designed and ran the evaluation of the existing model, wrote the memory-lean inference rewrite, built the generator workbench and wrote the research plan.</p>
+</section>
+
+<section>
+<h2>Stack</h2>
+<ul class="chips">
+<li>Python</li>
+<li>PyTorch</li>
+<li>CUDA</li>
+<li>U-Net++ (ResNet-50)</li>
+<li>3D HRNet</li>
+<li>Masked autoencoders</li>
+<li>Tversky loss</li>
+<li>Synthetic seismic generation</li>
+<li>FastAPI</li>
+<li>Docker Compose</li>
+<li>RTX 5080 (16 GB)</li>
+</ul>
+</section>
+
+<section>
+<h2>Outputs</h2>
+<ul>
+<li>ASEG DISCOVER Symposium 2026, Cairns: extended abstract and short talk, "Survey-conditioned pre-training for label-efficient seismic fault detection", V. Alekseev, P. Makuluni, R. T. Armstrong, N. Khalili, S. R. Clark. Talk on 28 October 2026.</li>
+<li>AEGC 2025, Perth: poster, "Generation of synthetic data for enhancing seismic imaging using deep learning". With my supervisors, September 2025.</li>
+</ul>
+</section>
+
+  </article>
+</main>
+<footer class="wrap"><a class="back" href="./">← Back to the timeline</a><span class="sign">— Vlad</span></footer>
+</body>
+</html>

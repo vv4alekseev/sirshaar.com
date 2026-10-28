@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UNSW Digital Twin: machine learning on real campus data · Vladislav Alekseev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="post.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="back" href="./">← Timeline</a>
+  <a class="me" href="./"><img src="photo.jpg" alt="" width="32" height="32">Vladislav Alekseev</a>
+</div></header>
+<main class="wrap">
+  <article class="post">
+    <div class="post-meta"><img class="logo" src="logo-unsw.png" alt="UNSW Sydney" height="22" width="53"><span>UNSW Sydney · Research Officer · 2026–now</span></div>
+    <h1>UNSW Digital Twin: machine learning on real campus data</h1>
+    
+    <p class="lede">CVEN4801 teaches machine learning on real data from the campus its students walk across every day. I built a curated offline dataset of the UNSW Kensington campus and unsw_twin, the Python toolkit that reads it, and wrote the CVEN4801 tutorials on top of them.</p>
+
+<section><h2>The problem</h2>
+<p>CVEN4801, Intelligent Systems in Civil and Environmental Engineering, teaches machine learning to civil and environmental engineering students. Real campus data exists, but it is scattered. Aerial imagery sits behind an API. Borehole logs and cone penetration tests are pages in PDF reports. Electricity load, weather and traffic come from different agencies, each with its own format, coordinate system and clock. Some sources record time in fixed AEST, others in Sydney local time with daylight saving.</p>
+<p>A student who has to clean all of this before the first model never gets to the machine learning. The course needed one dataset that loads in one line, works offline in Colab or on a laptop, and gives every student the same data.</p>
+</section>
+
+<section><h2>Approach</h2>
+<p><strong>Curate once, at build time.</strong> Maintainer scripts fetch each source, parse it and write finished files. Borehole logs are extracted from PDF reports with a word-position parser, stitched across page breaks and checked for depth continuity. CPTU soundings are digitised from the vector plots in a geotechnical report. All map features are converted to one coordinate system (MGA Zone 56, EPSG:28356) and all time stamps to one time zone (Australia/Sydney). Loaders only read files and never rename columns.</p>
+<p><strong>One interface for every dataset.</strong> Each dataset is a small module with the same four functions: <code>load()</code>, <code>show()</code>, <code>available()</code> and <code>about()</code>. <code>about()</code> returns the source, licence, citation, units and a data version hash, so two students can check that they have the same data. <code>show()</code> draws a default plot with matplotlib, folium or kepler.gl.</p>
+<p><strong>A shared vocabulary of products.</strong> Every output is described by three axes: where (raster, features or no location), when (static, dated snapshots or time series) and how deep (none, depth intervals or depth samples). A contract test checks every product of every module against its axes. Cross-dataset tools such as <code>between</code>, <code>within</code> and <code>rasterize</code> work on any product that fits, so a student can turn building footprints into a mask with the same pixels as the aerial image.</p>
+<p><strong>Tutorials on real questions.</strong> Each tutorial has a notebook with tasks, a notebook with solutions and slides. A student opens it in Colab and one setup cell installs the toolkit and downloads the data.</p>
+</section>
+
+<section><h2>Results</h2>
+<p>The toolkit ships 11 datasets for the campus and a 150 m margin around it:</p>
+<ul>
+<li>136 Nearmap aerial captures from 2009 to 2026, about 30 cm per pixel, with dated OpenStreetMap layers.</li>
+<li>76 campus buildings and 18,839 rooms from MazeMap, plus CVEN class timetables for 2023–2026 and the hourly building occupancy built from them.</li>
+<li>272 surveyed height marks, 67 consolidated borehole logs, 30 CPTU soundings and core-box photos.</li>
+<li>ERA5 weather history, hourly road traffic counts, 15-minute load of the zone substation that supplies the campus, and UNSW sustainability data.</li>
+</ul>
+<p>Five tutorials use them:</p>
+<ol>
+<li>The UNSW digital twin and aerial imagery.</li>
+<li>Getting data from an API and exploratory data analysis.</li>
+<li>Campus height uncertainty with Gaussian processes and a sampling plan.</li>
+<li>Patterns in campus electricity and buildings with PCA, k-means and anomaly detection.</li>
+<li>Soil classes from CPTU soundings with logistic regression, trees, random forests and SVM.</li>
+</ol>
+<p>The course first runs with these tutorials in Term 3, 2027.</p>
+<figure><img src="unsw-twin-v2.webp" alt="Diagram of unsw_twin: load campus data, explore it with twin modules, learn with tutorials, train your own models" width="1600" height="1000"><figcaption>What unsw_twin does: load the campus data, explore it with twin modules, learn from tutorials and train your own models.</figcaption></figure>
+<figure><img src="post-twin-1-v2.webp" alt="The campus as four stacked layers: weather and environment, surface with buildings, networks, and underground with boreholes" width="1098" height="1114"><figcaption>The four layers of the campus twin: weather and environment, surface, networks and underground.</figcaption></figure>
+</section>
+
+<section><h2>My role</h2>
+<p>Research Officer at UNSW since May 2026, supervised by Prof. Ryan Armstrong. I designed and built the dataset, the unsw_twin toolkit, its tests and documentation, and the CVEN4801 tutorial notebooks and slides.</p>
+</section>
+
+<section><h2>Stack</h2><ul class="chips"><li>Python</li><li>pandas</li><li>GeoPandas</li><li>xarray</li><li>rioxarray</li><li>rasterio</li><li>pyproj</li><li>Shapely</li><li>matplotlib</li><li>folium</li><li>kepler.gl</li><li>scikit-learn</li><li>pdfplumber</li><li>pytest</li><li>uv</li><li>Jupyter</li><li>Google Colab</li><li>Cloudflare R2</li></ul></section>
+
+  </article>
+</main>
+<footer class="wrap"><a class="back" href="./">← Back to the timeline</a><span class="sign">— Vlad</span></footer>
+</body>
+</html>
