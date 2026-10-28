@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Survey-conditioned pre-training for label-efficient seismic fault detection · Vladislav Alekseev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="post.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="back" href="./">← Timeline</a>
+  <a class="me" href="./"><img src="photo.jpg" alt="" width="32" height="32">Vladislav Alekseev</a>
+</div></header>
+<main class="wrap">
+  <article class="post">
+    <div class="post-meta"><img class="logo" src="logo-unsw.png" alt="UNSW Sydney" height="22" width="53"><span>UNSW Sydney · ASEG DISCOVER 2026 · Cairns · 28 October 2026</span></div>
+    <h1>Survey-conditioned pre-training for label-efficient seismic fault detection</h1>
+    
+    <p class="lede">A short talk at the 2nd ASEG DISCOVER Symposium in Cairns on 28 October 2026, with Patrick Makuluni, Ryan T. Armstrong, Nasser Khalili and Stuart R. Clark. Session 3.5, Boardroom 2. The question: how far can the unlabelled target survey itself take a fault detector when expert labels are scarce?</p>
+
+<section>
+<h2>Interpreters disagree</h2>
+<p>Fault labels are scarce, and the people who draw them disagree. The CRACKS benchmark labels the same Netherlands F3 sections by an expert and eight practitioners. Scored against the expert as line F1 on fault skeletons, the practitioners range from 0.16 to 0.47.</p>
+<figure><img src="phd-interpreters.webp" alt="Six views of the same F3 section: the seismic, the expert's faults, the best interpreter's faults, the second best, the last, and all eight interpreters overlaid." width="1600" height="467"><figcaption>Top: the seismic, the expert and the best practitioner (line F1 0.47). Bottom: the second best (0.34), the last (0.16) and all eight practitioners overlaid.</figcaption></figure>
+<p>The usual answer is pre-training on synthetic data from ever more complex generators. The talk asks what the target survey can add, since it is always there and needs no labels.</p>
+</section>
+
+<section>
+<h2>Method</h2>
+<figure><img src="phd-pipeline.webp" alt="Pipeline: the unlabelled target survey feeds three label-free routes (self-supervised trace reconstruction, survey-conditioned synthetics and a calibrated physics generator) into a U-Net++, followed by fine-tuning on a few labelled sections, post-processing and evaluation against the expert." width="1600" height="791"><figcaption>Three label-free routes into one network, then fine-tuning, post-processing and evaluation against the expert.</figcaption></figure>
+<p>Three label-free routes pre-train one U-Net++ with a ResNet-50 encoder on the unlabelled F3 survey:</p>
+<ul>
+<li>Self-supervised: mask real traces and reconstruct them.</li>
+<li>Survey-conditioned synthetics: the survey's own traces with a simple fault generator, so the labels are exact and the realism comes from the data.</li>
+<li>A physics-based generator calibrated to the survey's statistics and wells.</li>
+</ul>
+<p>The network is then fine-tuned on a few labelled sections and scored exactly like the interpreters: line F1 against the expert, within a few pixels.</p>
+</section>
+
+<section>
+<h2>Results</h2>
+<p>Trained on the picks of the best practitioner alone, every model beats all eight practitioners. The best reaches line F1 0.58, where that practitioner scores 0.47. It recovers 64% of the expert's certain faults, against 47% for the practitioner, and 49% of the uncertain ones, against 34%.</p>
+<p>With no CRACKS labels at all, the survey-calibrated generator scores 0.30 and beats five of the eight practitioners. Classic synthetics score 0.24.</p>
+<figure><img src="phd-leaderboard.webp" alt="Ranking by line F1 against the expert: five models trained on Practitioner 6's picks score 0.56 to 0.58, above Practitioner 6 at 0.47 and the other interpreters at 0.16 to 0.34. The calibrated generator without CRACKS labels scores 0.30, classic synthetics 0.24." width="1600" height="860"><figcaption>Who agrees with the expert: models trained on 33 sections picked by Practitioner 6 (blue), models with no CRACKS labels (green) and the eight practitioners (grey).</figcaption></figure>
+<figure><img src="phd-certain.webp" alt="CRACKS section 131: the expert's certain faults, the best interpreter's picks and the model's picks, then each compared with the expert." width="1600" height="585"><figcaption>Certain faults on CRACKS section 131: the expert, the best practitioner and the model trained on that practitioner's picks. Bottom row: picks within 5 px of an expert fault in green, extra picks in red, missed expert faults in yellow.</figcaption></figure>
+<figure><img src="phd-uncertain.webp" alt="CRACKS section 267: the same comparison for faults the expert marked as uncertain." width="1600" height="585"><figcaption>The same comparison for uncertain faults on CRACKS section 267.</figcaption></figure>
+</section>
+
+<section>
+<h2>Take-aways</h2>
+<ol>
+<li>A model trained on one interpreter's picks beats that interpreter.</li>
+<li>With no labels, a survey-calibrated generator beats five of eight practitioners.</li>
+<li>Survey conditioning finds the ambiguous faults with few labels.</li>
+</ol>
+<p>This talk is one strand of my PhD. The wider research is in the <a href="post-phd.html">PhD post</a>.</p>
+</section>
+
+  </article>
+</main>
+<footer class="wrap"><a class="back" href="./">← Back to the timeline</a><span class="sign">— Vlad</span></footer>
+</body>
+</html>

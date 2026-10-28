@@ -854,7 +854,7 @@ footer .sign { font: 500 1.6rem/1 var(--font-hand); color: var(--pen); }
     const keys = allEvents.filter((e) => e.key);
 
     // Full posts live on their own pages.
-    const POSTS = { 'd-phd': 'phd', 'd-aseg': 'phd', 'd-microct': 'microct', 'd-papers2021': 'microct', 'd-dentalmesh': 'dentalmesh', 'd-twin': 'twin', 'd-dp': 'dp', 'd-orion': 'orion' };
+    const POSTS = { 'd-phd': 'phd', 'd-aseg': 'aseg', 'd-microct': 'microct', 'd-papers2021': 'microct', 'd-dentalmesh': 'dentalmesh', 'd-twin': 'twin', 'd-dp': 'dp', 'd-orion': 'orion' };
     const postUrl = (id) => (POSTS[id] ? `post-${POSTS[id]}.html` : null);
 
     // Chapters: one per key point, built from the project templates.
